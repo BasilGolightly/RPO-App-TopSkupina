@@ -4,11 +4,11 @@ Spletna aplikacija za deljenje datotek in vsebin med uporabniki (slike, videopos
 
 ## Uporabljene tehnologije
 
-**MySQL** - DB
-**PHP** - backend
-**HTML, CSS** - front-end
-**javascript** - dinamičen front-end
-**docker** - ustvarjanje container-ja
+**MySQL** - DB  
+**PHP** - backend  
+**HTML, CSS** - front-end  
+**javascript** - dinamičen front-end  
+**docker** - ustvarjanje container-ja  
 
 ## Vzpostavitev okolja
 
