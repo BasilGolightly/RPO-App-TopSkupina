@@ -7,8 +7,8 @@ Spletna aplikacija za deljenje datotek in vsebin med uporabniki (slike, videopos
 **MySQL** - DB  
 **PHP** - backend  
 **HTML, CSS** - front-end  
-**javascript** - dinamičen front-end  
-**docker** - ustvarjanje container-ja  
+**Javascriptt** - dinamičen front-end  
+**Docker** - ustvarjanje container-ja  
 
 ## Vzpostavitev okolja
 
