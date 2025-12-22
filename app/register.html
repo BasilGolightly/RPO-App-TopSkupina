@@ -7,11 +7,12 @@
     <title>Register</title>
     <link rel="stylesheet" type="text/css" href="style/register.css">
     <link rel="stylesheet" type="text/css" href="style/style.css">
+    <script src="backend/js/registerScript.js" defer></script>
 </head>
 
 <body>
     <!--MAIN FRAME-->
-    <form class="main" enctype="multipart/form-data" method="post" action="register.php">
+    <form class="main" enctype="multipart/form-data" method="post" action="backend/php/register.php">
         <div class="container">
             <div class="card">
                 <div class="top">
@@ -19,6 +20,7 @@
                 </div>
                 <div class="mid">
                     Register
+
                 </div>
                 <div class="formContainer">
                     <div class="usernameContainer">
@@ -39,7 +41,7 @@
                                     <input type="password" name="password" id="password" required maxlength="50">
                                 </div>
                                 <div>
-                                    <button>Show password</button>
+                                    <input type="checkbox" onclick="togglePassword(this, 'password')">Show Password 
                                 </div>
                             </div>
                         </div>
@@ -54,7 +56,7 @@
                                     <input type="password" name="repeatPass" id="repeatPass" required maxlength="50">
                                 </div>
                                 <div>
-                                    <button>Show password</button>
+                                    <input type="checkbox" onclick="togglePassword(this, 'repeatPass')">Show Password 
                                 </div>
                             </div>
                         </div>
