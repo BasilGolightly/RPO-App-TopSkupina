@@ -4,8 +4,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
+    <link rel="stylesheet" type="text/css" href="style/register.css">
+    <link rel="stylesheet" type="text/css" href="style/style.css">
 </head>
 <body>
-    
+    <!--MAIN FRAME-->
+    <form class="main" enctype="multipart/form-data" method="post" action="register.php">
+        <div class="container">
+            <div class="top">
+                BitBug
+            </div>
+            <div class="mid">
+                Register
+            </div>
+            <div class="formContainer">
+                <div class="usernameContainer">
+                    <div>
+                        Username
+                    </div>
+                    <div>
+                        <input type="text" name="username" id="username" required maxlength="50">
+                    </div>
+                </div>
+                <div class="passContainer">
+                    <div>
+                        Password
+                    </div>
+                    <div>
+                        <div>
+                            <input type="password" name="password" id="password" required maxlength="50">
+                        </div>
+                        
+                        <div>
+                            <button>Show password</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="repeatPassContainer">
+                    <div>
+                        Repeat Password
+                    </div>
+                    <div>
+                        <div>
+                            <input type="password" name="repeatPass" id="repeatPass" required maxlength="50">
+                        </div>
+                        <div>
+                            <button>Show password</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="submitContainer">
+                    <div>
+                        <input type="submit" value="Register" id="registerBtn">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!--MAIN FRAME-->
 </body>
 </html>
