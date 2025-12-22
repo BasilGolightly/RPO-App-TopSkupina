@@ -1,5 +1,5 @@
 <?php
-include "conn_test.php";
+include "conn.php";
 
 $username   = trim($_POST['username'] ?? '');
 $password   = $_POST['password'] ?? '';
@@ -10,14 +10,22 @@ if ($username === '') {
     die('Username is required.');
 }
 
+$unamecheck = "SELECT * FROM users WHERE username = ?";
+$stmt_check = $conn->prepare($unamecheck);
+$stmt_check->bind_param("s", $username);
+$stmt_check->execute();
+$unamecheck_result = $stmt_check->get_result();
+
+if($unamecheck_result->num_rows === 1) {
+    die('Name already exists.');
+}
+$stmt_check->close();
+
 if ($password === '' || $password !== $rPassword) {
     die('Passwords do not match.');
 }
 
 $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
-//conn
-$conn = new mysqli("localhost", "root", "", "BitBug");
 
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
