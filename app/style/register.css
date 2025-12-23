@@ -1,4 +1,10 @@
 .main{
+    background-color: #131813;
+    background-image: url("../media/roachRawPng.png");
+    background-repeat: repeat;
+    background-clip: padding-box 50px;
+    background-origin: content-box;
+    background-size: 150px;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -16,11 +22,14 @@
 
 .card{
     display: grid;
-    grid-template-columns: 500px;
-    grid-template-rows: auto 50px auto;
-    border: 2px solid black;
+    grid-template-columns: 400px;
+    grid-template-rows: auto auto auto;
+    border: 2px solid rgba(120, 255, 160, 0.35);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
     border-radius: 20px;
     padding: 20px;
+    background-color: #232d23;
+    color: white;
 }
 
 .card > div{
@@ -33,29 +42,107 @@
 }
 
 .mid{
-    font-size: 20px;
+    text-align: left;
+}
+
+.header{
+    font-size: 22px;
     font-weight: bold;
+}
+
+.sub, .checkCon{
+    text-transform: uppercase;
+    font-size: 12px;
+    color: rgba(120, 255, 160, 0.95);
+}
+
+.sub{ 
+    margin-top: 5px;
+}
+
+.formContainer{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: center;
+}
+
+.formContainer div{
+    justify-content: left;
+    text-align: left;
+    width: 100%;
+    margin-bottom: 5px;
+    font-size: 13px;
+    font-weight: 600;
 }
 
 input[type="text"], input[type="password"]{
     outline: none;
     border: 0;
     border-bottom: 1px solid black;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 2px solid rgba(120, 255, 160, 0.20);
+    background-color: #0f140f;
+    color: #e9f2ea;
+    outline: none;
+    width: 95%;
+    margin-right: 5px;
+}
+
+input[type="text"]::placeholder, input[type="password"]::placeholder{
+    color: rgba(233, 242, 234, 0.45);
+}
+
+input[type="text"]:focus, input[type="password"]:focus{
+    border-color: rgba(120, 255, 160, 0.65);
 }
 
 .passInner{
     display: grid;
     grid-template-rows: auto;
-    grid-template-columns: auto auto;
+    grid-template-columns: 80% 20%;
 }
 
-.passContainer{
+.passInner input{
+    width: 90%;
+}
+
+.checkCon{
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    vertical-align: middle;
+    margin-top: 1ch;
 }
 
-.passInner div{
-    width: fit-content;
-    margin: 5px;
+input[type="submit"]{
+    margin-top: 6px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 2px solid rgba(120, 255, 160, 0.45);
+    background: rgba(40, 220, 110, 0.20);
+    color: #e9f2ea;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    width: 100%;
+}
+
+input[type="submit"]:hover{
+    background: rgba(40, 220, 110, 0.30);
+}
+
+.loginInner{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center !important;
+    text-align: center;
+}
+
+.loginInner a{
+    color: rgba(120, 255, 160, 0.95);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(120, 255, 160, 0.45);
 }

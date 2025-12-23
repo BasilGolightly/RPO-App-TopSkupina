@@ -7,6 +7,7 @@ $rPassword  = $_POST['repeatPass'] ?? '';
 
 //check
 if ($username === '') {
+    echo "<script>alert('Username is required');</script>";
     die('Username is required.');
 }
 
@@ -17,11 +18,13 @@ $stmt_check->execute();
 $unamecheck_result = $stmt_check->get_result();
 
 if($unamecheck_result->num_rows === 1) {
+    echo "<script>alert('Name already exists');</script>";
     die('Name already exists.');
 }
 $stmt_check->close();
 
 if ($password === '' || $password !== $rPassword) {
+    echo "<script>alert('Password do not match');</script>";
     die('Passwords do not match.');
 }
 
@@ -46,4 +49,6 @@ $stmt->close();
 $conn->close();
 
 echo "uspeh!";
+// redirect na index.php
+header('Location: ../../index.php');
 ?>

@@ -14,21 +14,34 @@
     <!--MAIN FRAME-->
     <form class="main" enctype="multipart/form-data" method="post" action="backend/php/register.php">
         <div class="container">
+            <!--CARD-->
             <div class="card">
+                <!--LOGO-->
                 <div class="top">
                     <img src="media/logo2Long.png" class="logoLong">
                 </div>
-                <div class="mid">
-                    Register
+                <!--LOGO-->
 
+                <!--TITLE-->
+                <div class="mid">
+                    <div class="header">
+                        BitBug
+                    </div>
+                    <div class="sub">
+                        Register
+                    </div>
                 </div>
+                <!--TITLE-->
+
+                <!--FORM-->
                 <div class="formContainer">
                     <div class="usernameContainer">
                         <div>
                             Username
                         </div>
                         <div>
-                            <input type="text" name="username" id="username" required maxlength="50">
+                            <input type="text" name="username" id="username" required maxlength="50"
+                                autocomplete="username" placeholder="Enter your username">
                         </div>
                     </div>
                     <div class="passContainer">
@@ -38,27 +51,46 @@
                             </div>
                             <div class="passInner">
                                 <div>
-                                    <input type="password" name="password" id="password" required maxlength="50">
+                                    <input type="password" name="password" id="password" required maxlength="50"
+                                        placeholder="New password" autocomplete="new-password">
                                 </div>
-                                <div>
-                                    <input type="checkbox" onclick="togglePassword(this, 'password')">Show Password 
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="repeatPassContainer passContainer">
-                        <div class="passFlex">
-                            <div>
-                                Repeat Password
-                            </div>
-                            <div class="passInner">
-                                <div>
-                                    <input type="password" name="repeatPass" id="repeatPass" required maxlength="50">
-                                </div>
-                                <div>
-                                    <input type="checkbox" onclick="togglePassword(this, 'repeatPass')">Show Password 
+                                <div class="checkCon">
+                                    <div>
+                                        <input type="checkbox" onclick="togglePassword(this, 'password')">
+                                    </div>
+                                    <div>
+                                        Show
+                                        <div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+                            <div class="repeatPassContainer passContainer">
+                                <div class="passFlex">
+                                    <div>
+                                        Repeat Password
+                                    </div>
+                                    <div class="passInner">
+                                        <div>
+                                            <input type="password" name="repeatPass" id="repeatPass" required
+                                                maxlength="50" placeholder="Repeat password"
+                                                autocomplete="new-password">
+                                        </div>
+                                        <div class="checkCon">
+                                            <div>
+                                                <input type="checkbox" onclick="togglePassword(this, 'repeatPass')">
+                                            </div>
+                                            <div>
+                                                Show
+                                                <div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
                         </div>
                     </div>
                     <div class="submitContainer">
@@ -66,9 +98,14 @@
                             <input type="submit" value="Register" id="registerBtn">
                         </div>
                     </div>
+                    <div class="loginContainer">
+                        <div class="loginInner">
+                            Already have an account?&ThickSpace;<a href="./login.html">Login here</a>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
+                <!--FORM-->
+            <!--CARD-->
     </form>
     <!--MAIN FRAME-->
 </body>
