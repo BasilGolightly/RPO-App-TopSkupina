@@ -1,19 +1,35 @@
-body{
-  overflow-x: hidden;
-  overflow-y: hidden;
+body {
+  overflow: hidden;
 }
 
-body.auth{
+body.auth {
   min-height: 100vh;
-  background: #131813;
   color: #e9f2ea;
   display: grid;
   place-items: center;
   padding: 24px;
+  /*BACKGROUND*/
+  background-color: #131813;
+  background-image: url("../media/pattern1.png");
+  background-repeat: repeat;
+  background-origin: content-box;
+  background-size: 800px;
+  animation: backgroundAnimation 150s linear infinite;
 }
 
-.auth .card{
+@keyframes backgroundAnimation {
+  from {
+    background-position: bottom right;
+  }
+
+  to {
+    background-position: top left;
+  }
+}
+
+.auth .card {
   position: relative;
+  top: 20%;
   width: min(380px, 92vw);
 
   border: 2px solid rgba(120, 255, 160, 0.35);
@@ -23,10 +39,10 @@ body.auth{
 
   background: #232d23;
 
-  box-shadow: 0 16px 40px rgba(0,0,0,0.35);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
 }
 
-.auth .logo{
+.auth .logo {
   position: absolute;
   top: -58px;
   left: 54%;
@@ -35,16 +51,16 @@ body.auth{
   height: auto;
   display: block;
 
-  filter: drop-shadow(0 10px 14px rgba(0,0,0,0.45));
+  filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.45));
 }
 
-.auth .card h1{
+.auth .card h1 {
   margin: 0;
   font-size: 22px;
   letter-spacing: 0.4px;
 }
 
-.auth .card .sub{
+.auth .card .sub {
   margin: 4px 0 14px;
   font-size: 12px;
   letter-spacing: 0.12em;
@@ -52,19 +68,19 @@ body.auth{
   color: rgba(120, 255, 160, 0.95);
 }
 
-.auth .card form{
+.auth .card form {
   display: grid;
   gap: 10px;
 }
 
-.auth .card label{
+.auth .card label {
   display: grid;
   gap: 6px;
   font-size: 13px;
   font-weight: 600;
 }
 
-.auth .card input{
+.auth .card input {
   padding: 10px 12px;
   border-radius: 10px;
   border: 2px solid rgba(120, 255, 160, 0.20);
@@ -73,15 +89,15 @@ body.auth{
   outline: none;
 }
 
-.auth .card input::placeholder{
+.auth .card input::placeholder {
   color: rgba(233, 242, 234, 0.45);
 }
 
-.auth .card input:focus{
+.auth .card input:focus {
   border-color: rgba(120, 255, 160, 0.65);
 }
 
-.auth .card button{
+.auth .card button {
   margin-top: 6px;
   padding: 10px 12px;
   border-radius: 12px;
@@ -96,23 +112,23 @@ body.auth{
   cursor: pointer;
 }
 
-.auth .card button:hover{
+.auth .card button:hover {
   background: rgba(40, 220, 110, 0.30);
 }
 
-.auth .register{
+.auth .register {
   margin-top: 12px;
   text-align: center;
   font-size: 13px;
   opacity: 0.9;
 }
 
-.auth .register a{
+.auth .register a {
   color: rgba(120, 255, 160, 0.95);
   text-decoration: none;
   border-bottom: 1px solid rgba(120, 255, 160, 0.45);
 }
 
-.auth .register a:hover{
+.auth .register a:hover {
   border-bottom-color: rgba(120, 255, 160, 0.9);
 }

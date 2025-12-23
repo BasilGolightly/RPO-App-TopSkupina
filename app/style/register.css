@@ -1,16 +1,27 @@
+body{
+    overflow: hidden;
+}
+
 .main{
-    background-color: #131813;
-    background-image: url("../media/roachRawPng.png");
-    background-repeat: repeat;
-    background-clip: padding-box 50px;
-    background-origin: content-box;
-    background-size: 150px;
     display: flex;
     flex-direction: row;
     justify-content: center;
     text-align: center; 
     width: 100%;
     height: 100%;
+
+    /*BACKGROUND*/
+    background-color: #131813;
+    background-image: url("../media/pattern1.png");
+    background-repeat: repeat;
+    background-origin: content-box;
+    background-size: 800px;
+    animation: backgroundAnimation 150s linear infinite;
+}
+
+@keyframes backgroundAnimation {
+    from{ background-position: bottom right;}
+    to{ background-position: top left;}
 }
 
 .container{
