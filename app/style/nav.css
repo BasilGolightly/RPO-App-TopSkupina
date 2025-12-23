@@ -1,0 +1,65 @@
+nav {
+  display: flex;
+  border-bottom: 2px solid rgba(120, 255, 160, 0.35);
+  padding: 0 1rem;
+  height: 4rem;
+  justify-content: space-between;
+  background-color: rgba(6, 190, 62, 0.35);
+  border-radius: 14px 14px 0 0;
+}
+
+.navLevo {
+  display: flex;
+  align-items: center;
+}
+
+.navDesno {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+nav img {
+  max-height: 80%;
+}
+
+nav ul {
+  display: flex;
+  gap: 1rem;
+}
+
+nav ul li {
+  list-style-type: none;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+  font-size: 1.5rem;
+  display: block;
+  height: 100%;
+  width: 100%;
+  padding: 0.2rem;
+  align-items: center;
+}
+
+nav ul li.selected a {
+  background-color: rgba(120, 255, 160, 0.35);
+  border-radius: 0.5rem;
+}
+
+nav button{
+  margin-top: 6px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 2px solid rgba(120, 255, 160, 0.45);
+
+  background: rgba(40, 220, 110, 0.20);
+  color: #e9f2ea;
+
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+}
