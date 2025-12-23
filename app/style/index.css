@@ -85,6 +85,7 @@ main {
   gap: 2%;
   border: 2px solid rgba(120, 255, 160, 0.20);
   transition: 0.1s;
+  align-items: center;
 }
 
 #seznam a:hover {
@@ -102,6 +103,7 @@ main {
   height: 12%;
   font-size: 1.5rem;
   text-align: left;
+  width: 95%;
 }
 
 #seznam a p {
@@ -111,4 +113,5 @@ main {
   margin: 0;
   overflow: hidden;
   font-size: 0.9rem;
+  width: 95%;
 }
