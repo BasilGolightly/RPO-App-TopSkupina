@@ -9,7 +9,8 @@ CREATE TABLE users(
     username char(30) NOT NULL,
     password char(255) NOT NULL,
     role enum('user', 'admin', 'mod') NOT NULL DEFAULT 'user',
-    joined date DEFAULT CURRENT_DATE
+    joined date DEFAULT CURRENT_DATE,
+    description TEXT DEFAULT 'About me =)'
 );
 
 -- LOGIN - logiranje prijav
@@ -52,6 +53,15 @@ CREATE TABLE post_upload(
     FOREIGN KEY (id_upload) REFERENCES upload(id)
 );
 
+-- PFP - profilske slike (neobvezna relacija med upload in user tabelo)
+CREATE TABLE pfp(
+    id int AUTO_INCREMENT PRIMARY KEY,
+    id_user int NOT NULL,
+    id_upload int NOT NULL,
+    FOREIGN KEY (id_user) REFERENCES users(id),
+    FOREIGN KEY (id_upload) REFERENCES upload(id)
+);
+
 -- COMMENT - komentarji na poste / threade
 DROP TABLE IF EXISTS comment;
 CREATE TABLE comment(
@@ -65,13 +75,4 @@ CREATE TABLE comment(
     FOREIGN KEY (id_comment) REFERENCES comment(id)
 );
 
-INSERT INTO users(id, username, password, role, joined) VALUES (DEFAULT, 'admin', 'root123', 'admin', DEFAULT);
-
-
-
-
-
-
-
-
-
+INSERT INTO users(id, username, password, role, joined, description) VALUES (DEFAULT, 'admin', 'root123', 'admin', DEFAULT, DEFAULT);
