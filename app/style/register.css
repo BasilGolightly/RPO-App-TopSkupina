@@ -89,8 +89,6 @@ body{
 
 input[type="text"], input[type="password"]{
     outline: none;
-    border: 0;
-    border-bottom: 1px solid black;
     padding: 10px 12px;
     border-radius: 10px;
     border: 2px solid rgba(120, 255, 160, 0.20);
