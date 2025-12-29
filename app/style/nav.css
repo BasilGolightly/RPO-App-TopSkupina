@@ -49,6 +49,11 @@ nav ul li.selected a {
   border-radius: 0.5rem;
 }
 
+nav ul li:hover a {
+  text-decoration: underline;
+  transition: 0.1s;
+}
+
 nav button{
   margin-top: 6px;
   padding: 10px 12px;
@@ -62,4 +67,64 @@ nav button{
   text-transform: uppercase;
   letter-spacing: 0.08em;
   cursor: pointer;
+}
+
+.nav-uporabnik {
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+  align-items: flex-end;
+}
+
+.nav-uporabnik h1 {
+  font-size: 0.2rem;
+}
+
+.nav-uporabnik a {
+  cursor: pointer;
+  color: white;
+  text-decoration: none;
+  width: fit-content;
+}
+
+#nav-search {
+  text-align: left;
+}
+
+#nav-search input {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 2px solid rgba(120, 255, 160, 0.20);
+  background: #0f140f;
+  color: #e9f2ea;
+  outline: none;
+}
+
+#nav-search button {
+  border: none;
+  background-color: transparent;
+  transform: scale(180%);
+}
+
+#nav-add-post::after {
+  content: "+";
+  position: absolute;
+  margin-left: 0.5rem;
+  margin-top: -0.1rem;
+  transform: scale(150%);
+}
+
+#nav-add-post:hover::after {
+  content: "+";
+  position: absolute;
+  margin-left: 0.5rem;
+  margin-top: -0.1rem;
+  transform: scale(210%);
+  transition: 0.1s;
+}
+
+#nav-logout-button:hover::after {
+  content: "Logout";
+  margin: 0 0.5rem;
+  transition: 0.1s;
 }
