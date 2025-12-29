@@ -1,6 +1,5 @@
 <?php
 session_start();
-
 include "conn.php";
 
 $username   = trim($_POST['username'] ?? '');
