@@ -1,5 +1,11 @@
 <!DOCTYPE html>
+
 <html lang="en">
+  <?php
+  if(isset($_SESSION['loginError']) && $_SESSION['loginError'] != ""){
+      echo "<script>alert('". $_SESSION['loginError'] . "');</script>";
+  }
+  ?>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />

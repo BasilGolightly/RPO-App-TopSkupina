@@ -1,6 +1,7 @@
 <?php
 session_destroy();
 include "conn.php";
+unset($_SESSION['registerError']);
 
 $username   = trim($_POST['username'] ?? '');
 $password   = $_POST['password'] ?? '';
@@ -8,7 +9,8 @@ $rPassword  = $_POST['repeatPass'] ?? '';
 
 //check
 if ($username === '') {
-    echo "<script>alert('Username is required');</script>";
+    $_SESSION['registerError'] = 'Username is required.';
+    header("Location: ../../login.html");
     die('Username is required.');
 }
 
@@ -19,19 +21,23 @@ $stmt_check->execute();
 $unamecheck_result = $stmt_check->get_result();
 
 if($unamecheck_result->num_rows === 1) {
-    echo "<script>alert('Name already exists');</script>";
-    die("Name already exists");
+    $_SESSION['registerError'] = "Name already exists.";
+    header("Location: ../../register.php");
+    die("Name already exists.");
 }
 $stmt_check->close();
 
 if ($password === '' || $password !== $rPassword) {
-    echo "<script>alert('Password do not match');</script>";
+    $_SESSION['registerError'] = "Password do not match";
+    header("Location: ../../register.php");
     die("Passwords do not match");
 }
 
 $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
 if ($conn->connect_error) {
+    $_SESSION['registerError'] = "Connection failed";
+    header("Location: ../../register.php");
     die("Connection failed: " . $conn->connect_error);
 }
 
@@ -55,10 +61,13 @@ if($stmt->execute()){
     header('Location: ../../index.php');
     die();
 }
+else{
+    $_SESSION['registerError'] = "Failed registration.";
+    $stmt->close();
+    $conn->close();
+    header("Location: ../../register.php");
+    die("Failed registration.");
+}
 
-echo "<script>alert('Napaka pri registraciji');</script>";
-
-$stmt->close();
-$conn->close();
 
 ?>
