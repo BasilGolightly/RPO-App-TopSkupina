@@ -105,6 +105,8 @@ body{
     border-color: rgba(120, 255, 160, 0.45);
 }
 
+
+
 .insidetab button:hover {
     background-color: rgba(40, 220, 110, 0.30);
 }
@@ -130,3 +132,23 @@ img {
     border-radius: 10px;
     padding: 5px;
 }
+
+
+.savebutton {
+  justify-self: start;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  padding: 5px;
+  margin-right: 40px;
+  width: 150px;
+
+  background-color: rgba(40, 220, 110, 0.20);
+  color: white;
+  border-radius: 12px;
+  border-color: rgba(120, 255, 160, 0.45);
+}
+
+
+
+

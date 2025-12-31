@@ -8,7 +8,7 @@
         <ul>
             <li class="selected"><a href="">Home</a></li>
             <li><a href="">Friends</a></li>
-            <li><a href="">My Profile</a></li>
+            <li><a href="profile.php">My Profile</a></li>
             <li><a href="">Boards</a></li>
             <li><a href="" id="nav-add-post">Add post</a></li>
 
