@@ -2,8 +2,11 @@
 <html lang="en">
 
 <?php
+session_start();
 if(isset($_SESSION['registerError']) && $_SESSION['registerError'] != ""){
-    echo "<script>alert('". $_SESSION['registerError'] . "');</script>";
+    echo '<script language="javascript">';
+    echo 'alert("' . $_SESSION['registerError'] . '");';
+    echo '</script>';
 }
 ?>
 
@@ -106,7 +109,7 @@ if(isset($_SESSION['registerError']) && $_SESSION['registerError'] != ""){
                     </div>
                     <div class="loginContainer">
                         <div class="loginInner">
-                            Already have an account?&ThickSpace;<a href="./login.html">Login here</a>
+                            Already have an account?&ThickSpace;<a href="./login.php">Login here</a>
                         </div>
                     </div>
                 </div>

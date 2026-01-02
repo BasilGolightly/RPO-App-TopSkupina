@@ -1,5 +1,6 @@
 <?php
 session_start();
+session_destroy();
 include "conn.php";
 unset($_SESSION['loginError']);
 
@@ -10,13 +11,13 @@ $password   = trim($_POST['password'] ?? '');
 if($username == ""){
     $_SESSION['loginError'] = "Username is required.";
     header("Location: ../../login.php");
-    die('Username is required.');
+    //die('Username is required.');
 }
 
 //password check
 if($password == ""){
     $_SESSION['loginError'] = "Password is required.";
-    die('Password is required.');
+    //die('Password is required.');
     header("Location: ../../login.php");
 }
 
@@ -31,7 +32,7 @@ $result = $stmt->get_result();
 if($result->num_rows !== 1){
     $_SESSION['loginError'] = "Username not found.";
     header("Location: ../../login.php");
-    die("Username not found");
+    //die("Username not found");
 }
 
 $row = $result->fetch_assoc();
@@ -40,7 +41,7 @@ $row = $result->fetch_assoc();
 if(!password_verify($password, $row["password"])){
     $_SESSION['loginError'] = "Wrong password. Try again.";
     header("Location: ../../login.php");
-    die("Wrong password");
+    //die("Wrong password");
 }
 
 //seja

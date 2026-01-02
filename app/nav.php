@@ -1,3 +1,9 @@
+<?php 
+    if(!isset($_SESSION['user_id']) || !isset($_SESSION['username']) || !isset($_SESSION['role'])){
+        header("Location: login.php");
+    }
+?>
+
 <link rel="stylesheet" href="./style/nav.css" />
 
 <nav>
@@ -25,8 +31,8 @@
         </div>
         <button style="display: none">Prijava</button>
         <div class="nav-uporabnik">
-            <h1 style="font-size: 1.2rem;"><a href="">Janez Novak</a></h1>
-            <a id="nav-logout-button">➜]</a>
+            <h1 style="font-size: 1.2rem;"><a href=""><?php echo $_SESSION['username']?></a></h1>
+            <a id="nav-logout-button" href="./backend/php/logout.php">➜]</a>
         </div>
         <img class="logo" src="./media/logo1Pixel.png" alt="Uporabniska slika" />
     </div>

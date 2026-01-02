@@ -1,7 +1,7 @@
 <?php
     session_start();
     if(!isset($_SESSION['user_id']) || !isset($_SESSION['username']) || !isset($_SESSION['role'])){
-        header("Location: login.html");
+        header("Location: login.php");
     }
 ?>
 
@@ -78,5 +78,9 @@
             include "footer.php";
         ?>
     </div>
+
+    <?php
+    //var_dump($_SESSION);
+    ?>
 </body>
 </html>

@@ -1,4 +1,5 @@
 <?php
+session_start();
 session_destroy();
 include "conn.php";
 unset($_SESSION['registerError']);
@@ -59,7 +60,6 @@ if($stmt->execute()){
     $stmt->close();
     $conn->close();
     header('Location: ../../index.php');
-    die();
 }
 else{
     $_SESSION['registerError'] = "Failed registration.";

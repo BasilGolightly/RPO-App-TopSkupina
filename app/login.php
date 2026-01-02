@@ -2,8 +2,11 @@
 
 <html lang="en">
   <?php
+  session_start();
   if(isset($_SESSION['loginError']) && $_SESSION['loginError'] != ""){
-      echo "<script>alert('". $_SESSION['loginError'] . "');</script>";
+    echo '<script language="javascript">';
+    echo 'alert("' . $_SESSION['loginError'] . '");';
+    echo '</script>';
   }
   ?>
   <head>
@@ -43,7 +46,7 @@
         <button type="submit">Log in</button>
       </form>
 
-      <p class="register">No account? <a href="./register.html">Register</a></p>
+      <p class="register">No account? <a href="./register.php">Register</a></p>
     </main>
   </body>
 </html>

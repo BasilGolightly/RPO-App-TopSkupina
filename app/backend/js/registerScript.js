@@ -1,5 +1,5 @@
 document.getElementById('repeatPass').addEventListener('input', function () {
-    checkPass()
+    checkPass();
 });
 
 function togglePassword(checkbox, inputId) {
@@ -8,10 +8,13 @@ function togglePassword(checkbox, inputId) {
 }
 
 function checkPass(){
-    var pass = document.getElementById('password').value
-    var rPass = document.getElementById('repeatPass').value
+    var pass = document.getElementById('password').value;
+    var rPass = document.getElementById('repeatPass').value;
     if(pass != rPass)
     {
-        document.getElementById('registerBtn').disabled = true
-    } else {document.getElementById('registerBtn').disabled = false}
+        document.getElementById('registerBtn').disabled = true;
+    } 
+    else{
+        document.getElementById('registerBtn').disabled = false;
+    }
 }
