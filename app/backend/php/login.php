@@ -1,6 +1,6 @@
 <?php
 session_start();
-session_destroy();
+//session_destroy();
 include "conn.php";
 unset($_SESSION['loginError']);
 

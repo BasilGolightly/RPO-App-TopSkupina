@@ -29,7 +29,7 @@ body.auth {
 
 .auth .card {
   position: relative;
-  top: 20%;
+  top: calc(50vh - 400px);
   width: min(380px, 92vw);
 
   border: 2px solid rgba(120, 255, 160, 0.35);
