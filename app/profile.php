@@ -7,7 +7,11 @@ $username = $_SESSION["username"] ?? "";
 include "./backend/php/conn.php";
 
 $user_id = $_SESSION["user_id"] ?? "";
-$sql = "SELECT description FROM users WHERE id = ?";
+$sql = "SELECT users.description, upload.filename AS pfp_filename
+        FROM users
+        LEFT JOIN pfp on pfp.id_user = users.id
+        LEFT JOIN upload ON upload.id = pfp.id_upload
+        WHERE users.id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
@@ -15,8 +19,11 @@ $stmt->execute();
 $result = $stmt->get_result();
 $row = $result->fetch_assoc();
 
-// dobimo description iz db
+// dobimo description, filename in pa path
 $description = $row["description"] ?? "";
+$pfp_filename = $row["pfp_filename"] ?? "";
+$pfp_path = $pfp_filename !== "" ? "media/pfp/" . $pfp_filename : "media/roach_grayscale.jpg";
+
 
 $stmt->close();
 $conn->close();
@@ -37,7 +44,8 @@ $conn->close();
 <body class="main">
     <div class="container">
         <div class="tab">
-            <button class="tablinks" onclick="openTab(event, 'Account')" id="defaultOpen" style="border-radius: 22px 0px 0px 0px;">My Account</button>
+            <button class="tablinks" onclick="openTab(event, 'Account')" id="defaultOpen"
+                style="border-radius: 22px 0px 0px 0px;">My Account</button>
             <button class="tablinks" onclick="openTab(event, 'Settings')">Settings</button>
             <button class="tablinks" onclick="openTab(event, 'Posts')">Posts</button>
         </div>
@@ -47,28 +55,48 @@ $conn->close();
             <hr>
 
             <div class="insidetab">
-                <img src="media/roach_grayscale.jpg" alt="Profile">
+                <img src="<?= htmlspecialchars($pfp_path) ?>" alt="Profile">
                 <div class="text"><?= htmlspecialchars($username ?? "") ?></div>
-                <button class="editbutton">Change profile picture</button>
+                <form id="pfp-form" method="post" action="./backend/php/change_pfp.php" enctype="multipart/form-data">
+                    <input id="pfp-input" type="file" name="pfp" accept="image/*" class="pfp-hidden">
+                    <button class="editbutton" type="button" id="pfp-btn">Change profile picture</button>
+                </form>
             </div>
-            <div class="insidetab">
+            <div class="insidetab username-section">
                 <div>
+                    Username:
                     <?= htmlspecialchars($username ?? "") ?>
                 </div>
-                <button class="editbutton">Change username</button>
+                <?php
+                if (!empty($_SESSION["error"])): ?>
+                    <div class="error"><?= htmlspecialchars($_SESSION["error"]) ?></div>
+                    <?php unset($_SESSION["error"]); ?>
+                <?php endif; ?>
+                <form id="username-change-form" method="post" action="./backend/php/change_username.php">
+                    <button class="editbutton" type="button" id="username-change-btn">Change username</button>
+                    <div id="username-change-container" class="hidden">
+                        <input type="text" name="new_username" placeholder="New username" id="username-change-label">
+                    </div>
+                </form>
             </div>
             <div class="insidetab">
                 Password: ********
-                <button class="showbutton">show</button>
-                <button class="editbutton">Change password</button>
+                <form id="password-change-form" method="post" action="./backend/php/change_password.php">
+                    <button class="editbutton" type="button" id="password-change-btn">Change password</button>
+                    <div id="password-change-container" class="hidden">
+                        <input type="text" name="new_password" placeholder="New password" id="password-change-label">
+                    </div>
+                </form>
             </div>
             <div class="insidetab">
                 About me
-                <button class="editbutton" type="button" id="about-edit" style="margin-left: 10px; width: 60px;">Edit</button>
+                <button class="editbutton" type="button" id="about-edit"
+                    style="margin-left: 10px; width: 60px;">Edit</button>
             </div>
             <div class="insidetab">
                 <form method="post" action="./backend/php/update_description.php">
-                    <textarea readonly id="about-text" name="description" rows="10" cols="50"><?= htmlspecialchars($description ?? "") ?></textarea>
+                    <textarea readonly id="about-text" name="description" rows="10"
+                        cols="50"><?= htmlspecialchars($description ?? "") ?></textarea>
                     <button type="submit" class="savebutton">Save</button>
                 </form>
             </div>
@@ -112,6 +140,62 @@ $conn->close();
             aboutText.removeAttribute("readonly");
             aboutText.focus();
         });
+
+
+        // spreminjanje usernama || passworda
+        function change_username_or_password({
+            btnId,
+            containerId,
+            labelId,
+            formId,
+            saveText
+        }) {
+            let isInputHidden = true;
+            const btn = document.getElementById(btnId);
+            const container = document.getElementById(containerId);
+            const label = document.getElementById(labelId);
+            const form = document.getElementById(formId);
+
+            btn.addEventListener("click", () => {
+                if (isInputHidden) {
+                    container.classList.remove("hidden");
+                    label.focus();
+                    btn.textContent = saveText;
+                    isInputHidden = false;
+                } else {
+                    form.submit();
+                }
+            });
+        }
+
+        change_username_or_password({
+            btnId: "username-change-btn",
+            containerId: "username-change-container",
+            labelId: "username-change-label",
+            formId: "username-change-form",
+            saveText: "Save username"
+        });
+
+        change_username_or_password({
+            btnId: "password-change-btn",
+            containerId: "password-change-container",
+            labelId: "password-change-label",
+            formId: "password-change-form",
+            saveText: "Save password"
+        });
+
+
+        // spreminjanje pfp-ja
+        const pfp_input = document.getElementById("pfp-input");
+        const pfp_btn = document.getElementById("pfp-btn");
+        const pfp_form = document.getElementById("pfp-form");
+
+        pfp_btn.addEventListener("click", () => pfp_input.click());
+        pfp_input.addEventListener("change", () => {
+            if (pfp_input.files.length > 0) {
+                pfp_form.submit();
+            }
+        })
     </script>
 </body>
 
