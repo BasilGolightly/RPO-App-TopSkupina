@@ -87,9 +87,9 @@
                     </div>
                     <br><br>
                     <div class="input-wrap">
-                        <input type="text" placeholder="Name" required>
+                        <input type="text" placeholder="Name" required name="title">
                         <br>
-                        <input type="text" placeholder="Tags">
+                        <input type="text" placeholder="Tags" name="tags">
                         <br>
                         <textarea name="description" id="description" rows="4" placeholder="Description"></textarea>
                     </div>
