@@ -87,7 +87,7 @@
                     </div>
                     <br><br>
                     <div class="input-wrap">
-                        <input type="text" placeholder="Naslov" required>
+                        <input type="text" placeholder="Name" required>
                         <br>
                         <input type="text" placeholder="Tags">
                         <br>
