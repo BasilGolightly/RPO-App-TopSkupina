@@ -36,7 +36,8 @@ $stmt = $conn->prepare($sql);
 $stmt->bind_param("sss", $title, $u_id, $description);
 
 $stmt->execute();
+$stmt->close();
 
-header("Location: ../../board.php");
-
+header("Location: ../../board.php?title=" . urlencode($title));
+exit;
 ?>
