@@ -13,6 +13,9 @@ CREATE TABLE users(
     role enum('user', 'admin', 'mod') NOT NULL DEFAULT 'user',
     joined date DEFAULT CURRENT_DATE,
     description TEXT DEFAULT 'About me =)'
+    /* possible fix, če zgornja koda ne deluje (version dependant):
+    joined date DEFAULT (CURRENT_DATE)
+    description TEXT */
 );
 
 -- LOGIN - logiranje prijav
