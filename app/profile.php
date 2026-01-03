@@ -102,10 +102,47 @@ $conn->close();
             </div>
         </div>
 
-        <div id="Settings" class="tabcontent">
-            <div class="insidetab">Settings</div>
-            <hr>
-        </div>
+    <div id="Settings" class="tabcontent">
+    <div class="insidetab">Settings</div>
+    <hr>
+    
+    <div class="settings-container">
+        <form method="post" action="./backend/php/update_settings.php">
+            <div class="settings-row">
+                <label for="account-visibility">Account visibility</label>
+                <select id="account-visibility" name="visibility" class="visibility-dropdown">
+                    <option value="public">Public</option>
+                    <option value="private">Private</option>
+                    <option value="friends">Friends only</option>
+                </select>
+            </div>
+            
+            <div class="settings-description">
+                <strong>Private:</strong> Only users you follow can view your personal posts. If you wish to be a board, every member of the respective board can see your posts. <br>
+                <strong>Public:</strong> Your posts are visible to everyone, including users who do not follow you. <br>
+                <strong>Friends only:</strong> Only users you have added as friends can view your personal posts.
+            </div>
+            
+            <button type="submit" class="savebutton settings-save">Save changes</button>
+        </form>
+        
+        <hr class="settings-divider">
+        
+        <button class="editbutton settings-action" onclick="location.href='friends.php'">
+            Manage friends
+        </button>
+        
+        <button class="editbutton settings-action" onclick="location.href='boards.php'">
+            Manage boards
+        </button>
+        
+        <button class="editbutton delete-account" onclick="confirmDelete()">
+            Delete account
+        </button>
+    </div>
+</div>
+
+
 
         <div id="Posts" class="tabcontent">
             <div class="insidetab">Posts</div>
@@ -127,6 +164,11 @@ $conn->close();
             }
             document.getElementById(currentTab).style.display = "block";
             evt.currentTarget.className += " active";
+        }
+        function confirmDelete() {
+            if (confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+                location.href = './backend/php/delete_account.php';
+            }
         }
 
         document.getElementById("defaultOpen").click();

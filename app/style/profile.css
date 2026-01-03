@@ -255,3 +255,105 @@ img {
     overflow: hidden;
     pointer-events: none;
 }
+
+.settings-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+}
+
+.settings-row label {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #e9f2ea;
+}
+
+.visibility-dropdown {
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 2px solid rgba(120, 255, 160, 0.35);
+    background-color: #0f140f;
+    color: #e9f2ea;
+    font-size: 0.95rem;
+    cursor: pointer;
+    min-width: 150px;
+    font-family: inherit;
+}
+
+.visibility-dropdown:focus {
+    outline: none;
+    border-color: rgba(120, 255, 160, 0.65);
+}
+
+.visibility-dropdown option {
+    background-color: #0f140f;
+    color: #e9f2ea;
+}
+
+.settings-description {
+    font-size: 0.85rem;
+    color: rgba(233, 242, 234, 0.7);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    margin-top: 0.5rem;
+    padding: 0.75rem;
+    background-color: rgba(40, 220, 110, 0.1);
+    border-radius: 8px;
+    border-left: 3px solid rgba(120, 255, 160, 0.45);
+}
+
+.settings-save {
+    width: auto;
+    min-width: 150px;
+    margin-bottom: 2rem;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.settings-divider {
+    border: none;
+    border-top: 1px solid rgba(120, 255, 160, 0.25);
+    margin: 2rem 0;
+    width: 100%;
+}
+
+.settings-action {
+    display: block;
+    width: 100%;
+    max-width: 250px;
+    margin: 1rem 0;
+    margin-left: 20px;
+    margin-right: 0;
+    text-align: center;
+    cursor: pointer;
+}
+
+.delete-account {
+    display: block;
+    width: 100%;
+    max-width: 250px;
+    margin: 1rem 0;
+    margin-left: 20px;
+    margin-right: 0;
+    background: rgba(220, 40, 40, 0.25);
+    border: 2px solid rgba(255, 80, 80, 0.5);
+    color: #ffb3b3;
+    text-align: center;
+    cursor: pointer;
+}
+
+.delete-account:hover {
+    background: rgba(220, 40, 40, 0.35);
+    border-color: rgba(255, 80, 80, 0.7);
+}
+
+#Settings .insidetab {
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+#Settings .insidetab form {
+    width: 100%;
+}
