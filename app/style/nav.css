@@ -94,6 +94,14 @@ nav button{
   width: fit-content;
 }
 
+.nav-uporabnik a:hover {
+  cursor: pointer;
+  color: white;
+  text-decoration: none;
+  width: fit-content;
+  text-decoration: underline;
+}
+
 #nav-search {
   max-height: 62px;
   text-align: left;
