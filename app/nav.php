@@ -31,7 +31,7 @@
         </div>
         <button style="display: none">Prijava</button>
         <div class="nav-uporabnik">
-            <h1 style="font-size: 1.2rem;"><a href=""><?php echo $_SESSION['username']?></a></h1>
+            <h1 style="font-size: 1.2rem;"><a href=""><?php //echo $_SESSION['username']?></a></h1>
             <a id="nav-logout-button" href="./backend/php/logout.php">➜]</a>
         </div>
         <img class="logo" src="./media/logo1Pixel.png" alt="Uporabniska slika" />
