@@ -1,7 +1,6 @@
 <?php
 session_start();
 include "backend/php/conn.php";
-//include __DIR__ . "/backend/php/conn.php";
 
 $title = $_GET['title'] ?? '';
 
@@ -57,22 +56,30 @@ $stmt2->close();
             <div id="board-info">
                 <?php echo "<h1 class='title'>" . htmlspecialchars($board['title']) . "</h1>"; ?>
                 <p class="vb-tags-views"><strong>TBA</strong>, followers</p>
-                <?php echo "<p lass='vb-description'>" . htmlspecialchars($board['description']) . "</p>"; ?>
-                <!--<div id="objava-zvezdice">★★★☆☆</div>-->
+                <?php echo "<p class='vb-description'>" . htmlspecialchars($board['description']) . "</p>"; ?>
                 <div class="vb-users">
                     <div class="vb-user-profile">
                         <img src="./media/logo1Pixel.png" alt="logo">
                         <div class="vb-user-text">
-                            <?php echo "<p lass='vb-username'>" . htmlspecialchars($author['username']) . "</p>"; ?>
+                            <?php echo "<p class='vb-username'>" . htmlspecialchars($author['username']) . "</p>"; ?>
                             <p class="vb-role">Creator</p>
                         </div>
                     </div>
                 </div>
             </div>
-            <label class="vb-hide-info-label" for="vb-cb-hide-info"></label>
+
+            <!-- gumb ustvarjanje posta -->
+            <div id="ustvari-nov">
+                <?php if (isset($_SESSION['user_id'])): ?>
+                    <button id="novpost">Create a new post <span class="plus">+</span></button>
+                <?php else: ?>
+                    To create a post, <a href="login.php">Login</a>
+                <?php endif; ?>
+            </div>
+
+
             <div class="vb-content">
                 <div class="posts">
-                    <button class="createPostBtn">Create new post</button>
                     <h1>Recent posts</h1>
                     <div id="seznam">
                         <a class="objava">
@@ -131,14 +138,41 @@ $stmt2->close();
                     </ul>
                 </div>
             </div>
+
+
+           
+            <div id="postobrazec" style="display:none;">
+                <form method="POST" action="backend/php/createPost.php?title=<?= urlencode($board['title']) ?>" id="pObrazec">
+                    <div class="title-wrap">
+                        <span id="pencil">✎</span>
+                        <h1>CREATE A NEW POST</h1>
+                    </div>
+                    <div class="input-wrap">
+                        <input type="text" placeholder="Title" name="title" required>
+                        <textarea name="content" placeholder="Post content" rows="4" required></textarea>
+                    </div>
+                    <div class="submit-wrap">
+                        <input type="submit" value="CREATE POST">
+                        <button type="button" id="cancelPost">Cancel</button>
+                    </div>
+                </form>
+            </div>
+
+            <script>
+               
+                document.getElementById('novpost').addEventListener('click', function() {
+                    document.getElementById('postobrazec').style.display = 'block';
+                });
+
+               
+                document.getElementById('cancelPost').addEventListener('click', function() {
+                    document.getElementById('postobrazec').style.display = 'none';
+                });
+            </script>
         </main>
         <?php
             include "footer.php";
         ?>
     </div>
-
-    <?php
-    //var_dump($_SESSION);
-    ?>
 </body>
 </html>
