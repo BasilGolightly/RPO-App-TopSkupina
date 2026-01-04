@@ -1,3 +1,4 @@
+
 <?php
 session_start();
 include "backend/php/conn.php";
@@ -45,6 +46,9 @@ $stmt2->close();
     <link rel="stylesheet" href="./style/style.css" />
     <link rel="stylesheet" href="./style/board.css" />
     <title>BitBug</title>
+    <style>  
+    </style>
+    <script src="backend/js/boardScript.js" defer></script>
 </head>
 <body>
     <div id="container">
@@ -69,13 +73,14 @@ $stmt2->close();
             </div>
 
             <!-- gumb ustvarjanje posta -->
-            <div id="ustvari-nov">
-                <?php if (isset($_SESSION['user_id'])): ?>
-                    <button id="novpost">Create a new post <span class="plus">+</span></button>
-                <?php else: ?>
-                    To create a post, <a href="login.php">Login</a>
-                <?php endif; ?>
-            </div>
+        <div id="ustvari-nov">
+    <?php if (isset($_SESSION['user_id'])): ?>
+       
+        <button id="novpost">Create a new post <span class="plus">+</span></button>
+    <?php else: ?>
+        To create a post, <a href="login.php">Login</a>
+    <?php endif; ?>
+</div>
 
 
             <div class="vb-content">
@@ -141,34 +146,27 @@ $stmt2->close();
 
 
            
-            <div id="postobrazec" style="display:none;">
-                <form method="POST" action="backend/php/createPost.php?title=<?= urlencode($board['title']) ?>" id="pObrazec">
+            <!-- Obrazec za ustvarjanje posta v skritem stanju -->
+
+
+ <div id="postobrazec">
+                <form method="POST" action="backend/php/createPost.php" id="pObrazec">
                     <div class="title-wrap">
                         <span id="pencil">✎</span>
-                        <h1>CREATE A NEW POST</h1>
+                        <h1 id="naslov">CREATE A NEW POST</h1>
                     </div>
+                    <br><br>
                     <div class="input-wrap">
-                        <input type="text" placeholder="Title" name="title" required>
-                        <textarea name="content" placeholder="Post content" rows="4" required></textarea>
+                        <input type="text" placeholder="Title" required name="title">
+                        <br>
+                        <textarea name="content"  rows="4" placeholder="Post Content"></textarea>
                     </div>
                     <div class="submit-wrap">
                         <input type="submit" value="CREATE POST">
-                        <button type="button" id="cancelPost">Cancel</button>
+                        <button id="cancelPost" type="button">cancel</button>
                     </div>
                 </form>
             </div>
-
-            <script>
-               
-                document.getElementById('novpost').addEventListener('click', function() {
-                    document.getElementById('postobrazec').style.display = 'block';
-                });
-
-               
-                document.getElementById('cancelPost').addEventListener('click', function() {
-                    document.getElementById('postobrazec').style.display = 'none';
-                });
-            </script>
         </main>
         <?php
             include "footer.php";

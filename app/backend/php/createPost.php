@@ -15,7 +15,7 @@ $title = $_POST['title'] ?? '';
 $content = $_POST['content'] ?? '';
 $board_title = $_GET['title'];  
 
-
+// tole ne rabim pomoje
 $stmt_board = $conn->prepare("SELECT id FROM board WHERE title = ?");
 $stmt_board->bind_param("s", $board_title);
 $stmt_board->execute();
