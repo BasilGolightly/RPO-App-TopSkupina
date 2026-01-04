@@ -24,7 +24,7 @@ CREATE TABLE login(
     id int AUTO_INCREMENT PRIMARY KEY,
     id_user int NOT NULL,
     logged_in timestamp DEFAULT CURRENT_TIMESTAMP(),
-    FOREIGN KEY (id_user) REFERENCES users(id)
+    FOREIGN KEY (id_user) REFERENCES users(id) ON DELETE CASCADE
 );
 
 DROP TABLE IF EXISTS follow;
@@ -33,8 +33,8 @@ CREATE TABLE follow(
     id_user1 int NOT NULL,
     id_user2 int NOT NULL,
     accepted tinyint NOT NULL,
-    FOREIGN KEY (id_user1) REFERENCES users(id),
-    FOREIGN KEY (id_user2) REFERENCES users(id)
+    FOREIGN KEY (id_user1) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_user2) REFERENCES users(id) ON DELETE CASCADE
 );
 
 /*-------------------------POSTS-------------------------*/
@@ -46,7 +46,7 @@ CREATE TABLE post(
     id_user int NOT NULL,
     title char(100) NOT NULL,
     content text NOT NULL,
-    FOREIGN KEY (id_user) REFERENCES users(id)
+    FOREIGN KEY (id_user) REFERENCES users(id) ON DELETE CASCADE
 );
 
 -- POST_TAGS - dodajanje tagov na post
@@ -55,7 +55,16 @@ CREATE TABLE post_tags(
     id int AUTO_INCREMENT PRIMARY KEY,
     tag TEXT NOT NULL,
     id_post int NOT NULL,
-    FOREIGN KEY (id_post) REFERENCES post(id)
+    FOREIGN KEY (id_post) REFERENCES post(id) ON DELETE CASCADE
+);
+
+-- RATING - ocena posta
+DROP TABLE IF EXISTS rating;
+CREATE TABLE rating(
+    id int AUTO_INCREMENT PRIMARY KEY,
+    rating tinyint NOT NULL,
+    id_post int NOT NULL,
+    FOREIGN KEY (id_post) REFERENCES post(id) ON DELETE CASCADE
 );
 
 -- UPLOAD - objavljena datoteka
@@ -66,7 +75,7 @@ CREATE TABLE upload(
     filename char(100) NOT NULL,
     extension char(10) NOT NULL,
     category enum('picture', 'video', 'code', 'archive') NOT NULL,
-    FOREIGN KEY (id_user) REFERENCES users(id)
+    FOREIGN KEY (id_user) REFERENCES users(id) ON DELETE CASCADE
 );
 
 -- POST_UPLOAD - kateremu postu pripadajo datoteke (neobvezna relacija)
@@ -75,8 +84,8 @@ CREATE TABLE post_upload(
     id int AUTO_INCREMENT PRIMARY KEY,
     id_post int NOT NULL,
     id_upload int NOT NULL,
-    FOREIGN KEY (id_post) REFERENCES post(id),
-    FOREIGN KEY (id_upload) REFERENCES upload(id)
+    FOREIGN KEY (id_post) REFERENCES post(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_upload) REFERENCES upload(id) ON DELETE CASCADE
 );
 
 -- PFP - profilske slike (neobvezna relacija med upload in user tabelo)
@@ -84,8 +93,8 @@ CREATE TABLE pfp(
     id int AUTO_INCREMENT PRIMARY KEY,
     id_user int NOT NULL,
     id_upload int NOT NULL,
-    FOREIGN KEY (id_user) REFERENCES users(id),
-    FOREIGN KEY (id_upload) REFERENCES upload(id)
+    FOREIGN KEY (id_user) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_upload) REFERENCES upload(id) ON DELETE CASCADE
 );
 
 -- COMMENT - komentarji na poste / threade
@@ -96,7 +105,7 @@ CREATE TABLE comment(
     id_post int NOT NULL,
     content TEXT NOT NULL,
     id_comment int DEFAULT NULL /* za reply-je na drug comment */,
-    FOREIGN KEY (id_comment) REFERENCES comment(id)
+    FOREIGN KEY (id_comment) REFERENCES comment(id) ON DELETE CASCADE
 );
 
 /*-------------------------BOARDS-------------------------*/
@@ -117,8 +126,8 @@ CREATE TABLE user_board(
     id_user int NOT NULL,
     id_board int NOT NULL,
     role enum('admin', 'mod', 'user') NOT NULL,
-    FOREIGN KEY (id_user) REFERENCES users(id),
-    FOREIGN KEY (id_board) REFERENCES board(id)
+    FOREIGN KEY (id_user) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_board) REFERENCES board(id) ON DELETE CASCADE
 );
 
 -- DISCUSSION
@@ -129,8 +138,8 @@ CREATE TABLE discussion(
     description TEXT,
     id_board int NOT NULL,
     id_user int NOT NULL,
-    FOREIGN KEY (id_board) REFERENCES board(id),
-    FOREIGN KEY (id_user) REFERENCES users(id)
+    FOREIGN KEY (id_board) REFERENCES board(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_user) REFERENCES users(id) ON DELETE CASCADE
 );
 
 -- USER_DISCUSSION - comment v discussionu
@@ -140,8 +149,8 @@ CREATE TABLE user_discussion(
     id_user int NOT NULL,
     id_discussion int NOT NULL,
     content TEXT NOT NULL,
-    FOREIGN KEY (id_user) REFERENCES users(id),
-    FOREIGN KEY (id_discussion) REFERENCES discussion(id)
+    FOREIGN KEY (id_user) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_discussion) REFERENCES discussion(id) ON DELETE CASCADE
 );
 
 -- BOARD_POST - post v boardu
@@ -150,8 +159,8 @@ CREATE TABLE board_post(
     id int AUTO_INCREMENT PRIMARY KEY,
     id_board int NOT NULL,
     id_post int NOT NULL,
-    FOREIGN KEY (id_board) REFERENCES board(id),
-    FOREIGN KEY (id_post) REFERENCES post(id)
+    FOREIGN KEY (id_board) REFERENCES board(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_post) REFERENCES post(id) ON DELETE CASCADE
 );
 
 INSERT INTO users(id, username, password, role, joined, description) VALUES (DEFAULT, 'admin', 'root123', 'admin', DEFAULT, DEFAULT);
