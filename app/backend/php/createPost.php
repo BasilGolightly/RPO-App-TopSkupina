@@ -9,13 +9,14 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-
 $u_id = $_SESSION['user_id'];
 $title = $_POST['title'] ?? '';
 $content = $_POST['content'] ?? '';
-$board_title = $_GET['title'];  
+$board_id = $_POST['bID'] ?? '';
+$board_title = $_POST['bT'] ?? '';
+//$board_title = $_GET['title'];
 
-// tole ne rabim pomoje
+/* tole ne rabim pomoje (res je)
 $stmt_board = $conn->prepare("SELECT id FROM board WHERE title = ?");
 $stmt_board->bind_param("s", $board_title);
 $stmt_board->execute();
@@ -25,12 +26,7 @@ if ($result_board->num_rows === 0) {
     $error = "Board not found.";
     header("Location: ../../boards.php?error=" . urlencode($error));
     exit;
-}
-
-$board = $result_board->fetch_assoc();
-$board_id = $board['id'];  
-$stmt_board->close();
-
+}*/
 
 $sql = "INSERT INTO post (title, content, id_user)
         VALUES (?, ?, ?)";
@@ -41,7 +37,6 @@ $stmt->execute();
 
 $post_id = $stmt->insert_id;
 $stmt->close();
-
 
 $sql_relation = "INSERT INTO board_post (id_board, id_post) VALUES (?, ?)";
 $stmt_relation = $conn->prepare($sql_relation);

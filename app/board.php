@@ -1,4 +1,3 @@
-
 <?php
 session_start();
 include "backend/php/conn.php";
@@ -36,6 +35,19 @@ if ($result2->num_rows === 0) {
 $author = $result2->fetch_assoc();
 $stmt2->close();
 
+$stmt = $conn->prepare("
+    SELECT p.id, p.title, p.content, p.id_user
+    FROM post p
+    JOIN board_post bp ON bp.id_post = p.id
+    WHERE bp.id_board = ?
+");
+$stmt->bind_param("i", $board['id']);
+$stmt->execute();
+$result = $stmt->get_result();
+
+$posts = $result->fetch_all(MYSQLI_ASSOC);
+$stmt->close();
+
 ?>
 
 <!DOCTYPE html>
@@ -71,54 +83,28 @@ $stmt2->close();
                     </div>
                 </div>
             </div>
-
-            <!-- gumb ustvarjanje posta -->
-        <div id="ustvari-nov">
-    <?php if (isset($_SESSION['user_id'])): ?>
-       
-        <button id="novpost">Create a new post <span class="plus">+</span></button>
-    <?php else: ?>
-        To create a post, <a href="login.php">Login</a>
-    <?php endif; ?>
-</div>
-
-
             <div class="vb-content">
                 <div class="posts">
+                        <div id="ustvari-nov">
+                        <?php if (isset($_SESSION['user_id'])): ?>
+                        
+                            <button id="novpost">Create a new post <span class="plus">+</span></button>
+                        <?php else: ?>
+                            To create a post, <a href="login.php">Login</a>
+                        <?php endif; ?>
+                    </div>
                     <h1>Recent posts</h1>
                     <div id="seznam">
-                        <a class="objava">
-                            <img src="./media/logo1Pixel.png" alt="logo">
-                            <h1>Naslov objave</h1>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do </p>
-                            <div id="objava-zvezdice">★★★☆☆</div>
-                            <div id="objava-info">
-                                <div id="objava-info-levo">
-                                    <p>1M views</p>
-                                    <p>#coding, +1 file</p>
-                                </div>
-                                <div id="objava-info-desno">
-                                    <p>Janez Novak</p>
-                                    <img src="./media/logo1Pixel.png" alt="logo">
-                                </div>
-                            </div>
-                        </a>
-                        <a class="objava">
-                            <img src="./media/logo1Pixel.png" alt="logo">
-                            <h1>Naslov objave</h1>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do </p>
-                            <div id="objava-zvezdice">★★★☆☆</div>
-                            <div id="objava-info">
-                                <div id="objava-info-levo">
-                                    <p>1M views</p>
-                                    <p>#coding, +1 file</p>
-                                </div>
-                                <div id="objava-info-desno">
-                                    <p>Janez Novak</p>
-                                    <img src="./media/logo1Pixel.png" alt="logo">
-                                </div>
-                            </div>
-                        </a>
+                        <?php if (empty($posts)): ?>
+                            <p>No posts yet.</p>
+                        <?php else: ?>
+                            <?php foreach ($posts as $post): ?>
+                                <a class="objava">
+                                    <h2><?= htmlspecialchars($post['title']) ?></h2>
+                                    <p><?= htmlspecialchars($post['content']) ?></p>
+                                </a>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </div>
                 </div>
                 <div class="vb-discussions">
@@ -149,20 +135,22 @@ $stmt2->close();
             <!-- Obrazec za ustvarjanje posta v skritem stanju -->
 
 
- <div id="postobrazec">
+            <div id="postobrazec">
                 <form method="POST" action="backend/php/createPost.php" id="pObrazec">
+                    <input type="text" name="bID" value="<?php echo $board['id'] ?>" hidden>
+                    <input type="text" name="bT" value="<?php echo $board['title'] ?>" hidden>
                     <div class="title-wrap">
-                        <span id="pencil">✎</span>
+                        <span id="pencil">📨</span>
                         <h1 id="naslov">CREATE A NEW POST</h1>
                     </div>
                     <br><br>
                     <div class="input-wrap">
                         <input type="text" placeholder="Title" required name="title">
                         <br>
-                        <textarea name="content"  rows="4" placeholder="Post Content"></textarea>
+                        <textarea name="content"  rows="4" placeholder="Post Content" required></textarea>
                     </div>
                     <div class="submit-wrap">
-                        <input type="submit" value="CREATE POST">
+                        <input id="submitPost" type="submit" value="POST TO BOARD">
                         <button id="cancelPost" type="button">cancel</button>
                     </div>
                 </form>
