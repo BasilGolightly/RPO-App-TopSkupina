@@ -43,113 +43,123 @@ $conn->close();
 </head>
 
 <body class="main">
-    <div class="container">
-        <div class="tab">
-            <button class="tablinks" onclick="openTab(event, 'Account')" id="defaultOpen"
-                style="border-radius: 22px 0px 0px 0px;">My Account</button>
-            <button class="tablinks" onclick="openTab(event, 'Settings')">Settings</button>
-            <button class="tablinks" onclick="openTab(event, 'Posts')">Posts</button>
-        </div>
-
-        <div id="Account" class="tabcontent">
-            <div class="insidetab">Account details</div>
-            <hr>
-
-            <div class="insidetab">
-                <img src="<?= htmlspecialchars($pfp_path) ?>" alt="Profile">
-                <div class="text"><?= htmlspecialchars($username ?? "") ?></div>
-                <form id="pfp-form" method="post" action="./backend/php/change_pfp.php" enctype="multipart/form-data">
-                    <input id="pfp-input" type="file" name="pfp" accept="image/*" class="pfp-hidden">
-                    <button class="editbutton" type="button" id="pfp-btn">Change profile picture</button>
-                </form>
-            </div>
-            <div class="insidetab username-section">
-                <div>
-                    Username:
-                    <?= htmlspecialchars($username ?? "") ?>
-                </div>
-                <?php
-                if (!empty($_SESSION["error"])): ?>
-                    <div class="error"><?= htmlspecialchars($_SESSION["error"]) ?></div>
-                    <?php unset($_SESSION["error"]); ?>
-                <?php endif; ?>
-                <form id="username-change-form" method="post" action="./backend/php/change_username.php">
-                    <button class="editbutton" type="button" id="username-change-btn">Change username</button>
-                    <div id="username-change-container" class="hidden">
-                        <input type="text" name="new_username" placeholder="New username" id="username-change-label">
-                    </div>
-                </form>
-            </div>
-            <div class="insidetab">
-                Password: ********
-                <form id="password-change-form" method="post" action="./backend/php/change_password.php">
-                    <button class="editbutton" type="button" id="password-change-btn">Change password</button>
-                    <div id="password-change-container" class="hidden">
-                        <input type="text" name="new_password" placeholder="New password" id="password-change-label">
-                    </div>
-                </form>
-            </div>
-            <div class="insidetab">
-                About me
-                <button class="editbutton" type="button" id="about-edit"
-                    style="margin-left: 10px; width: 60px;">Edit</button>
-            </div>
-            <div class="insidetab">
-                <form method="post" action="./backend/php/update_description.php">
-                    <textarea readonly id="about-text" name="description" rows="10"
-                        cols="50"><?= htmlspecialchars($description ?? "") ?></textarea>
-                    <button type="submit" class="savebutton">Save</button>
-                </form>
-            </div>
-        </div>
-
-    <div id="Settings" class="tabcontent">
-    <div class="insidetab">Settings</div>
-    <hr>
-    
-    <div class="settings-container">
-        <form id="user-settings-form" method="post" action="./backend/php/update_settings.php">
-            <div class="settings-row">
-                <label for="account-visibility">Account visibility</label>
-                <select id="account-visibility" name="visibility" class="visibility-dropdown">
-                    <option value="public"<?php if($privacyOption === "public") echo " selected";?>>Public</option>
-                    <option value="private"<?php if($privacyOption === "private") echo " selected";?>>Private</option>
-                    <option value="friends"<?php if($privacyOption === "friends") echo " selected";?>>Friends only</option>
-                </select>
-                </div>
-            
-            <div class="settings-description">
-                <strong>Private:</strong> Only users you follow can view your personal posts. If you wish to be a board, every member of the respective board can see your posts. <br>
-                <strong>Public:</strong> Your posts are visible to everyone, including users who do not follow you. <br>
-                <strong>Friends only:</strong> Only users you have added as friends can view your personal posts.
-            </div>
-            
-            <button type="submit" class="savebutton settings-save">Save changes</button>
-        </form>
-        
-        <hr class="settings-divider">
-        
-        <button class="editbutton settings-action" onclick="location.href='friends.php'">
-            Manage friends
-        </button>
-        
-        <button class="editbutton settings-action" onclick="location.href='boards.php'">
-            Manage boards
-        </button>
-        
-        <button class="editbutton delete-account" onclick="confirmDelete()">
-            Delete account
-        </button>
+    <div>
+        <?php
+        include "nav.php";
+        ?>
     </div>
-</div>
+    <div class="profileContent">
+        <div class="container">
+            <div class="tab">
+                <button class="tablinks" onclick="openTab(event, 'Account')" id="defaultOpen"
+                    style="border-radius: 22px 0px 0px 0px;">My Account</button>
+                <button class="tablinks" onclick="openTab(event, 'Settings')">Settings</button>
+                <button class="tablinks" onclick="openTab(event, 'Posts')">Posts</button>
+            </div>
 
+            <div id="Account" class="tabcontent">
+                <div class="insidetab">Account details</div>
+                <hr>
 
+                <div class="insidetab">
+                    <img src="<?= htmlspecialchars($pfp_path) ?>" alt="Profile">
+                    <div class="text"><?= htmlspecialchars($username ?? "") ?></div>
+                    <form id="pfp-form" method="post" action="./backend/php/change_pfp.php" enctype="multipart/form-data">
+                        <input id="pfp-input" type="file" name="pfp" accept="image/*" class="pfp-hidden">
+                        <button class="editbutton" type="button" id="pfp-btn">Change profile picture</button>
+                    </form>
+                </div>
+                <div class="insidetab username-section">
+                    <div>
+                        Username:
+                        <?= htmlspecialchars($username ?? "") ?>
+                    </div>
+                    <?php
+                    if (!empty($_SESSION["error"])): ?>
+                        <div class="error"><?= htmlspecialchars($_SESSION["error"]) ?></div>
+                        <?php unset($_SESSION["error"]); ?>
+                    <?php endif; ?>
+                    <form id="username-change-form" method="post" action="./backend/php/change_username.php">
+                        <button class="editbutton" type="button" id="username-change-btn">Change username</button>
+                        <div id="username-change-container" class="hidden">
+                            <input type="text" name="new_username" placeholder="New username" id="username-change-label">
+                        </div>
+                    </form>
+                </div>
+                <div class="insidetab">
+                    Password: ********
+                    <form id="password-change-form" method="post" action="./backend/php/change_password.php">
+                        <button class="editbutton" type="button" id="password-change-btn">Change password</button>
+                        <div id="password-change-container" class="hidden">
+                            <input type="text" name="new_password" placeholder="New password" id="password-change-label">
+                        </div>
+                    </form>
+                </div>
+                <div class="insidetab">
+                    About me
+                    <button class="editbutton" type="button" id="about-edit"
+                        style="margin-left: 10px; width: 60px;">Edit</button>
+                </div>
+                <div class="insidetab">
+                    <form method="post" action="./backend/php/update_description.php">
+                        <textarea readonly id="about-text" name="description" rows="10"
+                            cols="50"><?= htmlspecialchars($description ?? "") ?></textarea>
+                        <button type="submit" class="savebutton">Save</button>
+                    </form>
+                </div>
+            </div>
 
-        <div id="Posts" class="tabcontent">
-            <div class="insidetab">Posts</div>
-            <hr>
+            <div id="Settings" class="tabcontent">
+                <div class="insidetab">Settings</div>
+                <hr>
+
+                <div class="settings-container">
+                    <form id="user-settings-form" method="post" action="./backend/php/update_settings.php">
+                        <div class="settings-row">
+                            <label for="account-visibility">Account visibility</label>
+                            <select id="account-visibility" name="visibility" class="visibility-dropdown">
+                                <option value="public" <?php if ($privacyOption === "public") echo " selected"; ?>>Public</option>
+                                <option value="private" <?php if ($privacyOption === "private") echo " selected"; ?>>Private</option>
+                                <option value="friends" <?php if ($privacyOption === "friends") echo " selected"; ?>>Friends only</option>
+                            </select>
+                        </div>
+
+                        <div class="settings-description">
+                            <strong>Private:</strong> Only users you follow can view your personal posts. If you wish to be a board, every member of the respective board can see your posts. <br>
+                            <strong>Public:</strong> Your posts are visible to everyone, including users who do not follow you. <br>
+                            <strong>Friends only:</strong> Only users you have added as friends can view your personal posts.
+                        </div>
+
+                        <button type="submit" class="savebutton settings-save">Save changes</button>
+                    </form>
+
+                    <hr class="settings-divider">
+
+                    <button class="editbutton settings-action" onclick="location.href='friends.php'">
+                        Manage friends
+                    </button>
+
+                    <button class="editbutton settings-action" onclick="location.href='boards.php'">
+                        Manage boards
+                    </button>
+
+                    <button class="editbutton delete-account" onclick="confirmDelete()">
+                        Delete account
+                    </button>
+                </div>
+            </div>
+
+            <div id="Posts" class="tabcontent">
+                <div class="insidetab">Posts</div>
+                <hr>
+            </div>
+
         </div>
-
+    </div>
+    <div>
+        <?php
+        include "footer.php";
+        ?>
     </div>
 
     <script>
@@ -166,6 +176,7 @@ $conn->close();
             document.getElementById(currentTab).style.display = "block";
             evt.currentTarget.className += " active";
         }
+
         function confirmDelete() {
             if (confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
                 location.href = './backend/php/delete_account.php';
