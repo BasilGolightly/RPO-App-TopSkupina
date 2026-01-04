@@ -12,10 +12,11 @@ CREATE TABLE users(
     password char(255) NOT NULL,
     role enum('user', 'admin', 'mod') NOT NULL DEFAULT 'user',
     joined date DEFAULT CURRENT_DATE,
-    description TEXT DEFAULT 'About me =)'
+    description TEXT DEFAULT 'About me =)', 
     /* possible fix, če zgornja koda ne deluje (version dependant):
     joined date DEFAULT (CURRENT_DATE)
     description TEXT */
+    privacy enum('private', 'public', 'friends') NOT NULL DEFAULT 'public'
 );
 
 -- LOGIN - logiranje prijav

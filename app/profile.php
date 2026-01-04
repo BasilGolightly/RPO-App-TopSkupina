@@ -7,7 +7,7 @@ $username = $_SESSION["username"] ?? "";
 include "./backend/php/conn.php";
 
 $user_id = $_SESSION["user_id"] ?? "";
-$sql = "SELECT users.description, upload.filename AS pfp_filename
+$sql = "SELECT users.description, users.privacy, upload.filename AS pfp_filename
         FROM users
         LEFT JOIN pfp on pfp.id_user = users.id
         LEFT JOIN upload ON upload.id = pfp.id_upload
@@ -22,6 +22,7 @@ $row = $result->fetch_assoc();
 // dobimo description, filename in pa path
 $description = $row["description"] ?? "";
 $pfp_filename = $row["pfp_filename"] ?? "";
+$privacyOption = $row["privacy"];
 $pfp_path = $pfp_filename !== "" ? "media/pfp/" . $pfp_filename : "media/roach_grayscale.jpg";
 
 
@@ -107,15 +108,15 @@ $conn->close();
     <hr>
     
     <div class="settings-container">
-        <form method="post" action="./backend/php/update_settings.php">
+        <form id="user-settings-form" method="post" action="./backend/php/update_settings.php">
             <div class="settings-row">
                 <label for="account-visibility">Account visibility</label>
                 <select id="account-visibility" name="visibility" class="visibility-dropdown">
-                    <option value="public">Public</option>
-                    <option value="private">Private</option>
-                    <option value="friends">Friends only</option>
+                    <option value="public"<?php if($privacyOption === "public") echo " selected";?>>Public</option>
+                    <option value="private"<?php if($privacyOption === "private") echo " selected";?>>Private</option>
+                    <option value="friends"<?php if($privacyOption === "friends") echo " selected";?>>Friends only</option>
                 </select>
-            </div>
+                </div>
             
             <div class="settings-description">
                 <strong>Private:</strong> Only users you follow can view your personal posts. If you wish to be a board, every member of the respective board can see your posts. <br>
