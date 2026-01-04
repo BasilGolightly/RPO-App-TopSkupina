@@ -17,13 +17,19 @@ body{
     color: rgba(120, 255, 160, 0.95);
 }
 
-input[type="text"], input[type="password"]{
+input[type="text"], input[type="password"], textarea{
     outline: none;
     padding: 10px 12px;
     border-radius: 10px;
     border: 2px solid rgba(120, 255, 160, 0.20);
     background-color: #0f140f;
     color: #e9f2ea;
+}
+
+textarea {
+    resize: none;
+    min-height: 80px;
+    line-height: 1.4;
 }
 
 input[type="text"]::placeholder, input[type="password"]::placeholder{

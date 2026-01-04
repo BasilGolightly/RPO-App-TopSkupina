@@ -56,6 +56,10 @@ main {
   flex: 1;
 }
 
+#board-info h1{
+  font-size: 40px;
+}
+
 #board-info {
   display: flex;
   flex-direction: column;
@@ -151,11 +155,11 @@ main h1, main p {
 
 /* recent posts */
 
-.vb-recent-posts {
+.posts {
   flex: 1;
 }
 
-.vb-recent-posts h1 {
+.posts h1 {
   text-align: left;
 }
 
@@ -310,4 +314,96 @@ main h1, main p {
 
 #seznam #objava-info #objava-info-desno img {
   height: 2rem;
+}
+
+#postobrazec {
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 25vw;
+    min-height:42vh;
+    border: 2px solid rgba(120, 255, 160, 0.35);
+    border-radius: 14px;
+    background: #232d23;
+    box-shadow: 4px 26px 60px rgba(0,0,0,0.35);
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    overflow-y: auto;
+    z-index: -1;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    padding: 20px;
+}
+
+#postobrazec.is-active {
+    z-index: 1000;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.title-wrap {
+    padding-top: 40px;
+    position: relative;
+}
+
+#pencil {
+    position: absolute;
+    z-index: 0;
+
+    font-size: 140px;
+    color: rgba(120, 255, 160, 0.35);
+    opacity: 0.5;
+
+    left: 50%;
+    top: 75%;
+    transform: translate(-50%, -50%);
+
+    pointer-events: none;
+}
+
+#naslov {
+    position: relative;
+    z-index: 1;
+}
+
+#pObrazec{
+    position: fixed;
+    left: 50%;
+    transform: translate(-50%, 0);
+    min-width: 90%;
+}
+
+#pObrazec input,
+#pObrazec textarea,
+#pObrazec button {
+    width: 90%;
+    margin-bottom: 15px;
+}
+
+#pObrazec input[type="submit"],
+#pObrazec button{
+    min-width: 200px;
+}
+
+.submit-wrap{
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-items: center;
+    gap: 10px;
+}
+
+#submitPost{
+    text-align: center;
+    grid-row: 1;
+    grid-column: 1;
+}
+
+#cancelPost{
+    text-align: center;
+    grid-row: 1;
+    grid-column: 2;
 }

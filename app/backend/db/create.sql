@@ -111,13 +111,31 @@ CREATE TABLE comment(
 
 /*-------------------------BOARDS-------------------------*/
 
+-- TAG
+DROP TABLE IF EXISTS tag;
+CREATE TABLE tag (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL UNIQUE
+);
+
 -- BOARD
 DROP TABLE IF EXISTS board;
 CREATE TABLE board(
-    id int AUTO_INCREMENT PRIMARY KEY,
-    title char(50),
-    tag char(50),
-    description TEXT
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title CHAR(50) NOT NULL,
+    id_user int NOT NULL,
+    description TEXT,
+    FOREIGN KEY (id_user) REFERENCES users(id)
+);
+
+-- BOARD TAG
+DROP TABLE IF EXISTS board_tag;
+CREATE TABLE board_tag (
+    id_board INT NOT NULL,
+    id_tag INT NOT NULL,
+    PRIMARY KEY (id_board, id_tag),
+    FOREIGN KEY (id_board) REFERENCES board(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_tag) REFERENCES tag(id) ON DELETE CASCADE
 );
 
 -- USER_BOARD 
