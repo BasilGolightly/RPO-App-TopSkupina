@@ -1,8 +1,14 @@
 <?php
     session_start();
-    /*if(!isset($_SESSION['user_id']) || !isset($_SESSION['username']) || !isset($_SESSION['role'])){
-        header("Location: login.php");
-    }*/
+    include "backend/php/conn.php";
+    //include __DIR__ . "/backend/php/conn.php";
+
+    $sql = "SELECT title, description FROM board ORDER BY title ASC";
+    $result = $conn->query($sql);
+
+    if (!$result) {
+        die("Query failed: " . $conn->error);
+    }
 ?>
 
 <!DOCTYPE html>
@@ -41,19 +47,18 @@
                 </div>
             </div>
             <div id="seznam">
-                <a class="objava">
-                    <img src="./media/logo1Pixel.png" alt="logo">
-                    <br>
-                    <p>#coding, +1 file</p>
-                    <h1>Naslov boarda</h1>
-                    <br>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do </p>
-                    <br>
-                    <div class="objava-board-follow">
-                        <button class="objava-board-follow-button">FOLLOW</button>
-                    </div>
-                </a>
+                <?php if ($result->num_rows === 0): ?>
+                    <p>No boards yet.</p>
+                <?php else: ?>
+                    <?php while ($board = $result->fetch_assoc()): ?>
+                        <a href="board.php?title=<?= urlencode($board['title']) ?>" class="objava" >
+                            <h2><?= htmlspecialchars($board['title']) ?></h2>
+                            <p><?= htmlspecialchars($board['description']) ?></p>
+                        </a>
+                    <?php endwhile; ?>
+                <?php endif; ?>
             </div>
+
 
             <div id="seznam-vrh">
                 <input class="index-filter-checkbox" id="index-filter-trending-checkbox" type="checkbox">

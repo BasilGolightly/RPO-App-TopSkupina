@@ -22,9 +22,9 @@
                 <a href="boards.php">Boards</a>
             </li>
 
-            <li>
+            <!--<li>
                 <a href="" id="nav-add-post">Add post</a>
-            </li>
+            </li>-->
 
             <div id="nav-search-mobile">
                 <input id="seznam-search" placeholder="Search" type="text">

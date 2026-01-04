@@ -56,6 +56,10 @@ main {
   flex: 1;
 }
 
+#board-info h1{
+  font-size: 40px;
+}
+
 #board-info {
   display: flex;
   flex-direction: column;
@@ -101,6 +105,10 @@ main h1, main p {
 
 .vb-role {
   font-style: italic;
+}
+
+#createPostBtn{
+
 }
 
 /* hide info */
@@ -151,11 +159,11 @@ main h1, main p {
 
 /* recent posts */
 
-.vb-recent-posts {
+.posts {
   flex: 1;
 }
 
-.vb-recent-posts h1 {
+.posts h1 {
   text-align: left;
 }
 
