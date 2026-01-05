@@ -48,6 +48,12 @@ $result = $stmt->get_result();
 $posts = $result->fetch_all(MYSQLI_ASSOC);
 $stmt->close();
 
+if(isset($_GET['error']) && $_GET['error'] !== ""){
+    echo '<script language="javascript">';
+    echo 'alert("' . $_GET['error'] . '");';
+    echo '</script>';
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -130,13 +136,10 @@ $stmt->close();
                 </div>
             </div>
 
-
-           
             <!-- Obrazec za ustvarjanje posta v skritem stanju -->
 
-
             <div id="postobrazec">
-                <form method="POST" action="backend/php/createPost.php" id="pObrazec">
+                <form method="POST" action="backend/php/createPost.php" id="pObrazec" enctype="multipart/form-data">
                     <input type="text" name="bID" value="<?php echo $board['id'] ?>" hidden>
                     <input type="text" name="bT" value="<?php echo $board['title'] ?>" hidden>
                     <div class="title-wrap">
@@ -149,12 +152,24 @@ $stmt->close();
                         <br>
                         <textarea name="content"  rows="4" placeholder="Post Content" required></textarea>
                     </div>
+                    <div class="file-title">
+                        UPLOAD FILES 
+                        <br>
+                        <span class="sub"><i>(max. 5 MB, 5 files)</i></span>
+                    </div>
+                    <div class="file-wrap">
+                        <label for="bFiles" class="custom-file-upload">
+                            <img src="./media/logo1.png" height="13" width="13"><span id="uploadText"> Upload files</span>
+                        </label>
+                        <input type="file" id="bFiles" name="bFiles[]" multiple>
+                    </div>
                     <div class="submit-wrap">
                         <input id="submitPost" type="submit" value="POST TO BOARD">
                         <button id="cancelPost" type="button">cancel</button>
                     </div>
                 </form>
             </div>
+
         </main>
         <?php
             include "footer.php";

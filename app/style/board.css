@@ -321,8 +321,8 @@ main h1, main p {
     top: 40%;
     left: 50%;
     transform: translate(-50%, -50%);
-    min-width: 25vw;
-    min-height:42vh;
+    min-width: 500px;
+    min-height: 450px;
     border: 2px solid rgba(120, 255, 160, 0.35);
     border-radius: 14px;
     background: #232d23;
@@ -337,6 +337,10 @@ main h1, main p {
     pointer-events: none;
     transition: opacity 0.2s ease;
     padding: 20px;
+}
+
+#postobrazec h1, #postobrazec h2{
+  text-transform: capitalize;
 }
 
 #postobrazec.is-active {
@@ -406,4 +410,23 @@ main h1, main p {
     text-align: center;
     grid-row: 1;
     grid-column: 2;
+}
+
+.file-title{
+  text-transform: capitalize;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.file-wrap{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+}
+
+input[type="file"] {
+  display: none;
 }
