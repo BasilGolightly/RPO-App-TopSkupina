@@ -11,7 +11,7 @@
         <div class="footer-right">
             <ul>
                 <p><strong>Profile</strong></p>
-                <li><a href="">My profile</a></li>
+                <li><a href="profile.php">My profile</a></li>
                 <li><a href="">Add post</a></li>
                 <li><a href="">Friends</a></li>
                 <li><a href="">My boards</a></li>
