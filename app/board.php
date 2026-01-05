@@ -99,7 +99,7 @@ $stmt->close();
                             <p>No posts yet.</p>
                         <?php else: ?>
                             <?php foreach ($posts as $post): ?>
-                                <a class="objava">
+                                <a href="post.php?title=<?= urlencode($post['title']) ?>" class="objava">
                                     <h2><?= htmlspecialchars($post['title']) ?></h2>
                                     <p><?= htmlspecialchars($post['content']) ?></p>
                                 </a>
