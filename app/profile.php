@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION["user_id"]) || !isset($_SESSION["username"]) || !isset($_SESSION["role"])) {
-    header("Location: login.html");
+    header("Location: login.php");
 }
 $username = $_SESSION["username"] ?? "";
 include "./backend/php/conn.php";
@@ -43,13 +43,13 @@ $conn->close();
 </head>
 
 <body class="main">
-    <div>
+    <div id="container">
         <?php
         include "nav.php";
         ?>
-    </div>
-    <div class="profileContent">
-        <div class="container">
+        <main>
+            <div class="profileContent">
+                <div class="container">
             <div class="tab">
                 <button class="tablinks" onclick="openTab(event, 'Account')" id="defaultOpen"
                     style="border-radius: 22px 0px 0px 0px;">My Account</button>
@@ -154,9 +154,9 @@ $conn->close();
                 <hr>
             </div>
 
-        </div>
-    </div>
-    <div>
+                </div>
+            </div>
+        </main>
         <?php
         include "footer.php";
         ?>
