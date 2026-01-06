@@ -75,6 +75,11 @@ main h1, main p {
   max-width: 30rem;
 }
 
+.objava{
+  color: white;
+  text-decoration: none;
+}
+
 #objava-zvezdice {
   color: yellow;
   font-size: 1.8rem;

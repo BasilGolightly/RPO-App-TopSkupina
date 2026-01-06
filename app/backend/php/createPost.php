@@ -19,7 +19,7 @@ $board_title = $_POST['bT'] ?? '';
 $maxfileSize = 5 * 1024 * 1024;
 $maxfileCount = 5;
 $fileCount = count($_FILES['bFiles']['name']);
-$uploadPath = __DIR__ . "/../../media/board/";
+$uploadPath = __DIR__ . "/../../media/board/upload";
 
 /* tole ne rabim pomoje (res je)
 $stmt_board = $conn->prepare("SELECT id FROM board WHERE title = ?");
@@ -58,22 +58,28 @@ if($fileCount <= $maxfileCount){
         if($_FILES['bFiles']['size'][$i] <= $maxfileSize){
             // get file properties, filename, extension
             $currFile = $_FILES['bFiles']['name'][$i];
-            $fileName = pathinfo($currFile, PATHINFO_FILENAME);
+            //$fileName = pathinfo($currFile, PATHINFO_FILENANE);
+            $fileName = "upload";
             $ext = pathinfo($currFile, PATHINFO_EXTENSION);
             $tempPath = $_FILES['bFiles']['tmp_name'][$i];
-            $currPath = $uploadPath . $_FILES['bFiles']['name'][$i];
+
+            // INSERT upload
+            $category = "archive";
+            $uploadSql = "INSERT INTO upload (id_user, filename, extension, category)
+            VALUES (?, ?, ?, ?)";
+            $stmtUpload = $conn->prepare($uploadSql);
+            $stmtUpload->bind_param("isss", $u_id, $fileName, $ext, $category); 
+            $stmtUpload->execute();
+
+            $uploadId = $stmtUpload->insert_id;
+            $fileName = $fileName . $uploadId;
+            $stmtUpload->close();
+
+            $stmtUpdate = $conn->prepare("UPDATE upload SET filename = ? WHERE id = ?");
+            $stmtUpdate->bind_param("si", $fileName, $uploadId);
+            $currPath = $uploadPath . $uploadId . "." . $ext;
 
             if(move_uploaded_file($tempPath, $currPath)){
-                // INSERT upload
-                $category = "archive";
-                $uploadSql = "INSERT INTO upload (id_user, filename, extension, category)
-                VALUES (?, ?, ?, ?)";
-                $stmtUpload = $conn->prepare($uploadSql);
-                $stmtUpload->bind_param("isss", $u_id, $fileName, $ext, $category); 
-                $stmtUpload->execute();
-                $uploadId = $stmtUpload->insert_id;
-                $stmtUpload->close();
-
                 // INSERT post_upload
                 $postUploadSql = "INSERT INTO post_upload (id_post, id_upload) 
                 VALUES (?, ?)";
@@ -82,6 +88,10 @@ if($fileCount <= $maxfileCount){
                 $stmtPostUp->execute();
                 $stmtPostUp->close();
             } 
+            else{
+                $error .= "The file\"" . $currFile = $_FILES['bFiles']['name'][$i] . "\" failed to upload!";
+                continue;
+            }
         }
         // too big of a file!
         else{
@@ -93,7 +103,6 @@ if($fileCount <= $maxfileCount){
 else{
     $error = "Too many (" . $fileCount . ") files!";
 }
-
 
 header("Location: ../../board.php?title=" . urlencode($board_title) . "&error=" . urlencode($error));
 exit;
