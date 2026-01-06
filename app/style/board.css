@@ -435,3 +435,39 @@ main h1, main p {
 input[type="file"] {
   display: none;
 }
+
+
+/* OBRAZEC NEW DISCUSSION */
+
+#postobrazec-discussion {
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 500px;
+    min-height: 450px;
+    border: 2px solid rgba(120, 255, 160, 0.35);
+    border-radius: 14px;
+    background: #232d23;
+    box-shadow: 4px 26px 60px rgba(0,0,0,0.35);
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    overflow-y: auto;
+    z-index: -1;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    padding: 20px;
+}
+
+#postobrazec-discussion h1, #postobrazec-discussion h2{
+  text-transform: capitalize;
+}
+
+#postobrazec-discussion.is-active {
+    z-index: 1000;
+    opacity: 1;
+    pointer-events: auto;
+}
