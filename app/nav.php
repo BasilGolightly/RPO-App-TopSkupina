@@ -43,7 +43,7 @@
         ): ?>
             <div class="nav-uporabnik">
                 <h1 style="font-size: 1.2rem;"><a href="profile.php"><?php echo $_SESSION['username']?></a></h1>
-                <br>
+                
                 <a id="nav-logout-button" href="./backend/php/logout.php">➜]</a>
             </div>
             <img class="logo" src="./media/logo1Pixel.png" alt="Uporabniska slika" />
