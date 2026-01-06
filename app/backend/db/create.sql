@@ -154,7 +154,7 @@ DROP TABLE IF EXISTS discussion;
 CREATE TABLE discussion(
     id int AUTO_INCREMENT PRIMARY KEY,
     title char(100),
-    description TEXT,
+    content TEXT,
     id_board int NOT NULL,
     id_user int NOT NULL,
     FOREIGN KEY (id_board) REFERENCES board(id) ON DELETE CASCADE,
