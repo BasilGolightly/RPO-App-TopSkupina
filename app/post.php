@@ -221,9 +221,12 @@ if($uploadCount > 0){
                             </div>
                         </div>
                     </div>
-                    <div style="align-items: center; margin-top: 10px;">
-                        <input type="text" name="add_comment" placeholder="Add comment..." id="add_comment">
-                    </div>
+                    <form method="post" id="comment-form" action="./backend/php/createComment.php" style="align-items: center; margin-top: 10px;">
+                        <input type="hidden" name="c-Id" id="parent-comment"> 
+                        <input type="text" name="new-comment" id="new-comment" placeholder="Add comment..." id="add-comment" required>
+                        <br>
+                        <input type="submit" id="submit-btn" value="Komentiraj">      
+                    <form>
                     <button id="report_button">Report</button> 
                 </div>
             </div>
