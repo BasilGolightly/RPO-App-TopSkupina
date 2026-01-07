@@ -54,6 +54,32 @@ if(isset($_GET['error']) && $_GET['error'] !== ""){
     echo '</script>';
 }
 
+$stmt = $conn->prepare("
+    SELECT d.id, d.title, u.username
+    FROM discussion d
+    JOIN users u ON d.id_user = u.id
+    WHERE d.id_board = ?
+");
+$stmt->bind_param("i", $board['id']);
+$stmt->execute();
+$result = $stmt->get_result();
+
+$discussions = $result->fetch_all(MYSQLI_ASSOC);
+$stmt->close();
+
+$stmt = $conn->prepare("
+    SELECT *
+    FROM discussion d
+    JOIN user_discussion ud ON d.id = ud.id_discussion
+    WHERE d.id_board = ?
+");
+$stmt->bind_param("i", $board['id']);
+$stmt->execute();
+$result = $stmt->get_result();
+$comments = $result->fetch_all(MYSQLI_ASSOC);
+$commentCount = count($comments);
+$stmt->close();
+
 ?>
 
 <!DOCTYPE html>
@@ -114,26 +140,45 @@ if(isset($_GET['error']) && $_GET['error'] !== ""){
                     </div>
                 </div>
                 <div class="vb-discussions">
+                    <button id="dis-new-button">Create discussion</button>
+                    <br>
+                    <br>
                     <h1>Discussions</h1>
                     <ul>
-                        <li>
-                            <h2><a href="">Discussion topic 1</a></h2>
-                            <p>10 comments</p>
-                            <div class="vb-d-user-info">
-                                <p>Janez Novak</p>
-                                <img src="./media/logo1Pixel.png" alt="logo">
-                            </div>
-                        </li>
-                        <li>
-                            <h2><a href="">Discussion topic 1</a></h2>
-                            <p>10 comments</p>
-                            <div class="vb-d-user-info">
-                                <p>Janez Novak</p>
-                                <img src="./media/logo1Pixel.png" alt="logo">
-                            </div>
-                        </li>
+                        <?php if (empty($discussions)): ?>
+                            <p>No posts yet.</p>
+                        <?php else: ?>
+                            <?php foreach ($discussions as $discussion): ?>
+                                <li>
+                                <h2><a href="discussion.php?id=<?= urlencode($discussion['id']) ?>"><?= htmlspecialchars($discussion['title'])?></a></h2>
+                                
+                                <?php
+                                    $stmt = $conn->prepare("
+                                        SELECT *
+                                        FROM discussion d
+                                        JOIN user_discussion ud ON d.id = ud.id_discussion
+                                        WHERE d.id = ?
+                                    ");
+                                    $stmt->bind_param("i", $discussion['id']);
+                                    $stmt->execute();
+                                    $result = $stmt->get_result();
+                                    $comments = $result->fetch_all(MYSQLI_ASSOC);
+                                    $commentCount = count($comments);
+                                    $stmt->close();
+                                ?>
+                                
+                                <p><?= htmlspecialchars($commentCount) ?> comments</p>
+                                <div class="vb-d-user-info">
+                                    <p><?= htmlspecialchars($discussion['username']) ?></p>
+                                    <img src="./media/logo1Pixel.png" alt="logo">
+                                </div>
+                            </li>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </ul>
                 </div>
+
+                
             </div>
 
             <!-- Obrazec za ustvarjanje posta v skritem stanju -->
@@ -166,6 +211,27 @@ if(isset($_GET['error']) && $_GET['error'] !== ""){
                     <div class="submit-wrap">
                         <input id="submitPost" type="submit" value="POST TO BOARD">
                         <button id="cancelPost" type="button">cancel</button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="postobrazec-discussion">
+                <form method="POST" action="backend/php/discussionApi.php?type=NewDis" id="pObrazec" enctype="multipart/form-data">
+                    <input type="text" name="bID" value="<?php echo $board['id'] ?>" hidden>
+                    <input type="text" name="bT" value="<?php echo $board['title'] ?>" hidden>
+                    <div class="title-wrap">
+                        <span id="pencil">📨</span>
+                        <h1 id="naslov">CREATE A NEW DISCUSSION</h1>
+                    </div>
+                    <br><br>
+                    <div class="input-wrap">
+                        <input type="text" placeholder="Title" required name="title">
+                        <br>
+                        <textarea name="content"  rows="4" placeholder="Post Content" required></textarea>
+                    </div>
+                    <div class="submit-wrap">
+                        <input id="submitPost-dis" type="submit" value="CREATE DISCUSSION">
+                        <button id="cancelPost-dis" type="button">cancel</button>
                     </div>
                 </form>
             </div>
