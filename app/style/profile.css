@@ -404,3 +404,42 @@ form[action$="update_description.php"] {
 #Settings .insidetab form {
     width: 100%;
 }
+
+#Posts .profile-posts {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+#Posts .profile-post {
+    display: block;
+    padding: 14px 16px;
+    border: 1px solid rgba(120, 255, 160, 0.25);
+    border-radius: 12px;
+    background: rgba(15, 20, 15, 0.6);
+    color: #e9f2ea;
+    text-decoration: none;
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+#Posts .profile-post:hover {
+    background: rgba(40, 220, 110, 0.12);
+    border-color: rgba(120, 255, 160, 0.55);
+    transform: translateY(-1px);
+}
+
+#Posts .profile-post h2 {
+    margin: 0 0 6px;
+    font-size: 1.05rem;
+    letter-spacing: 0.02em;
+}
+
+#Posts .profile-post p {
+    margin: 0;
+    color: rgba(233, 242, 234, 0.75);
+    font-size: 0.95rem;
+    line-height: 1.4;
+    max-height: 4.2em;
+    overflow: hidden;
+}
