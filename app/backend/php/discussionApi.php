@@ -47,10 +47,10 @@ elseif ($request_type == "NewComment") {
   header("Location: ../../discussion.php?id=" . urlencode($id_dis) . "&error=" . urlencode($error));
 }
 elseif ($request_type == "DeleteComment") {
-  $sql = "DELETE FROM user_discussion WHERE id = ?";
+  $sql = "DELETE FROM user_discussion WHERE id = ? AND id_user = ?";
 
   $stmt = $conn->prepare($sql);
-  $stmt->bind_param("i", $id_comment);
+  $stmt->bind_param("ii", $id_comment, $u_id);
   $stmt->execute();
 
   $stmt->close();
@@ -58,10 +58,10 @@ elseif ($request_type == "DeleteComment") {
   header("Location: ../../discussion.php?id=" . urlencode($id_dis) . "&error=" . urlencode($error));
 }
 elseif ($request_type == "DeleteDiscussion") {
-  $sql = "DELETE FROM discussion WHERE id = ?";
+  $sql = "DELETE FROM discussion WHERE id = ? AND id_user = ?";
 
   $stmt = $conn->prepare($sql);
-  $stmt->bind_param("i", $id_dis);
+  $stmt->bind_param("ii", $id_dis, $u_id);
   $stmt->execute();
 
   $stmt->close();
