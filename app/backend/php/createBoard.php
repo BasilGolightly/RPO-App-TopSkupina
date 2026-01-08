@@ -12,7 +12,13 @@ if (!isset($_SESSION['user_id'])) {
 
 $u_id = $_SESSION['user_id'];
 $title = $_POST['title'] ?? '';
-$tags = $_POST['tags'] ?? null;
+$tagsRaw = $_POST['tags'] ?? '';
+$tagsRaw = $_POST['tags'] ?? '';
+$tagsArray = array_map('trim', explode(',', $tagsRaw));
+$tagsArray = array_filter($tagsArray, fn($tag) => $tag !== '');
+$tagsArray = array_map('strtolower', $tagsArray);
+$tagsArray = array_unique($tagsArray);
+
 $description  = $_POST['description'] ?? null;
 
 $titlecheck = "SELECT * FROM board WHERE title = ?";
@@ -36,7 +42,37 @@ $stmt = $conn->prepare($sql);
 $stmt->bind_param("sss", $title, $u_id, $description);
 
 $stmt->execute();
+
+$boardId = $conn->insert_id;
 $stmt->close();
+
+//tags
+if (!empty($tags)) {
+    //stavki
+    $insertTag = $conn->prepare("INSERT IGNORE INTO tag (name) VALUES (?)");
+    $getTagId = $conn->prepare("SELECT id FROM tag WHERE name=?");
+    $linkTag = $conn->prepare("INSERT IGNORE INTO board_tag (id_board, id_tag) VALUES (?, ?)");
+
+    foreach ($tags as $tag) {
+        //vstavi tag (ce ze obstaja ignorira)
+        $insertTag->bind_param("s", $tag);
+        $insertTag->execute();
+
+        //tag id
+        $getTagId->bind_param("s", $tag);
+        $getTagId->execute();
+        $tagId = $getTagId->get_result()->fetch_assoc()['id'];
+
+        //povezemo board in tag
+        $linkTag->bind_param("ii", $boardId, $tagId);
+        $linkTag->execute();
+    }
+
+    //zapremo
+    $insertTag->close();
+    $getTagId->close();
+    $linkTag->close();
+}
 
 header("Location: ../../board.php?title=" . urlencode($title));
 exit;

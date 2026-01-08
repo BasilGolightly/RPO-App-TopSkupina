@@ -3,12 +3,171 @@
     include "backend/php/conn.php";
     //include __DIR__ . "/backend/php/conn.php";
 
-    $sql = "SELECT title, description FROM board ORDER BY title ASC";
-    $result = $conn->query($sql);
+    $sql = "
+    SELECT *
+    FROM board
+    ";
+    $all = $conn->query($sql);
 
-    if (!$result) {
+    $flw = null;
+    $myb = null;
+    if(isset($_SESSION['user_id'], $_SESSION['username'], $_SESSION['role'])){
+        $stm1 = $conn->prepare("
+            SELECT b.*, 
+                COUNT(DISTINCT bf2.id_user) AS followers,
+                COUNT(DISTINCT bp.id_post) AS posts
+            FROM board b
+            JOIN board_follow bf ON bf.id_board = b.id
+            LEFT JOIN board_follow bf2 ON bf2.id_board = b.id
+            LEFT JOIN board_post bp ON bp.id_board = b.id
+            WHERE bf.id_user = ?
+            GROUP BY b.id
+        ");
+        $stm1->bind_param("i", $_SESSION['user_id']);
+        $stm1->execute();
+        $flw = $stm1->get_result();
+        $stm1->close();
+
+        $stm2 = $conn->prepare("
+            SELECT b.*, 
+                COUNT(DISTINCT bf.id_user) AS followers,
+                COUNT(DISTINCT bp.id_post) AS posts
+            FROM board b
+            LEFT JOIN board_follow bf ON bf.id_board = b.id
+            LEFT JOIN board_post bp ON bp.id_board = b.id
+            WHERE b.id_user = ?
+            GROUP BY b.id
+        ");
+        $stm2->bind_param("i", $_SESSION['user_id']);
+        $stm2->execute();
+        $myb = $stm2->get_result();
+        $stm2->close();
+    }
+
+    $sql1 = "
+    SELECT b.*, 
+       COUNT(DISTINCT bp.id_post) AS posts,
+       COUNT(DISTINCT bf.id_user) AS followers
+    FROM board b
+    LEFT JOIN board_post bp ON bp.id_board = b.id
+    LEFT JOIN board_follow bf ON bf.id_board = b.id
+    GROUP BY b.id
+    ORDER BY posts DESC
+    LIMIT 5
+    "; // kej jih 5 pase v eno vrstico
+    $top5 = $conn->query($sql1);
+
+    $sql2 = "
+    SELECT b.*, 
+       COUNT(DISTINCT bp.id_post) AS posts,
+       COUNT(DISTINCT bf.id_user) AS followers
+    FROM board b
+    LEFT JOIN board_post bp ON bp.id_board = b.id
+    LEFT JOIN board_follow bf ON bf.id_board = b.id
+    GROUP BY b.id
+    ORDER BY followers DESC
+    LIMIT 5
+    "; // kej jih 5 pase v eno vrstico
+    $mfl5 = $conn->query($sql2);
+
+    $sql3 = "
+    SELECT b.*, 
+       COUNT(DISTINCT bf.id_user) AS followers,
+       COUNT(DISTINCT bp.id_post) AS posts
+    FROM board b
+    LEFT JOIN board_follow bf ON bf.id_board = b.id
+    LEFT JOIN board_post bp ON bp.id_board = b.id
+    GROUP BY b.id
+    ORDER BY b.created DESC
+    LIMIT 5
+    "; // kej jih 5 pase v eno vrstico
+    $new5 = $conn->query($sql3);
+
+    $sql4 = "
+    SELECT bt.id_board, t.name
+    FROM board_tag bt
+    JOIN tag t ON t.id = bt.id_tag
+    ";
+    $tags = $conn->query($sql4);
+
+    $fst = null;
+    if (isset($_SESSION['user_id'])) {
+        $stm4 = $conn->prepare("
+            SELECT id_board
+            FROM board_follow
+            WHERE id_user = ?
+        ");
+        $stm4->bind_param("i", $_SESSION['user_id']);
+        $stm4->execute();
+        $fst = $stm4->get_result();
+        $stm4->close();
+    }
+
+    if (!$top5 || !$mfl5 || !$new5 || !$tags) {
         die("Query failed: " . $conn->error);
     }
+
+    $tagsByBoard = [];
+
+    while ($row = $tags->fetch_assoc()) {
+        $tagsByBoard[$row['id_board']][] = $row['name'];
+    }
+
+    $followMap = [];
+
+    if ($fst) {
+        while ($row = $fst->fetch_assoc()) {
+            $followMap[(int)$row['id_board']] = true;
+        }
+    }
+
+    //search
+    $searchQuery = trim($_GET['q'] ?? '');
+
+    $isTagSearch = str_starts_with($searchQuery, '#');
+
+    if ($isTagSearch) {
+        $searchTag = strtolower(ltrim($searchQuery, '#')); // remove # and lowercase
+    }
+
+
+    if (!empty($searchQuery)) {
+        if ($isTagSearch) {
+            $stmt = $conn->prepare("
+                SELECT b.*, 
+                    COUNT(DISTINCT bf.id_user) AS followers,
+                    COUNT(DISTINCT bp.id_post) AS posts
+                FROM board b
+                JOIN board_tag bt ON bt.id_board = b.id
+                JOIN tag t ON t.id = bt.id_tag
+                LEFT JOIN board_follow bf ON bf.id_board = b.id
+                LEFT JOIN board_post bp ON bp.id_board = b.id
+                WHERE t.name = ?
+                GROUP BY b.id
+            ");
+            $stmt->bind_param("s", $searchTag);
+            $stmt->execute();
+            $searchResults = $stmt->get_result();
+        }
+        else {
+            $stmt = $conn->prepare("
+                SELECT b.*, 
+                    COUNT(DISTINCT bf.id_user) AS followers,
+                    COUNT(DISTINCT bp.id_post) AS posts
+                FROM board b
+                LEFT JOIN board_follow bf ON bf.id_board = b.id
+                LEFT JOIN board_post bp ON bp.id_board = b.id
+                WHERE b.title LIKE ? OR b.description LIKE ?
+                GROUP BY b.id
+            ");
+
+            $likeQuery = '%' . $searchQuery . '%';
+            $stmt->bind_param("ss", $likeQuery, $likeQuery);
+            $stmt->execute();
+            $searchResults = $stmt->get_result();
+        }
+    }
+
 ?>
 
 <!DOCTYPE html>
@@ -24,6 +183,7 @@
 <body>
     <div id="container">
         <?php
+            $searchContext = 'boards';
             include "nav.php";
         ?>
         <main>
@@ -36,54 +196,322 @@
                         To create a board please, <a href="login.php">Login</a>
                 <?php endif; ?>
             </div>
-            <div id="seznam-vrh">
-                <input class="index-filter-checkbox" id="index-filter-boards-checkbox" type="checkbox">
-                <label class="index-filter-label" for="index-filter-boards-checkbox">Boards ☰</label>
-                <div class="index-filter-div" id="index-filter-boards-div">
-                    <ul>
-                        <li><button>Recent</button></li>
-                        <li><button>Oldest</button></li>
-                    </ul>
-                </div>
-            </div>
-            <div id="seznam">
-                <?php if ($result->num_rows === 0): ?>
-                    <p>No boards yet.</p>
+
+            <!--search-->
+            <?php if (!empty($_GET['q']) && ($_GET['context'] ?? '') === 'boards'): ?>
+                <?php if ($searchResults->num_rows === 0): ?>
+                    <p>No boards found.</p>
                 <?php else: ?>
-                    <?php while ($board = $result->fetch_assoc()): ?>
-                        <a href="board.php?title=<?= urlencode($board['title']) ?>" class="objava" >
-                            <h2><?= htmlspecialchars($board['title']) ?></h2>
-                            <p><?= htmlspecialchars($board['description']) ?></p>
-                        </a>
-                    <?php endwhile; ?>
-                <?php endif; ?>
-            </div>
+                <details class="board-section" open>
+                    <summary>
+                        <span>Search results for "<?= htmlspecialchars($searchQuery) ?>"</span>
+                        <form action="boards.php">
+                            <button type= "submit">Clear search</button>
+                        </form>
+                    </summary>
 
+                    <div class="section-content">
+                        <!-- board -->
+                        <div id="seznam">
+                            <?php while ($board = $searchResults->fetch_assoc()): ?>
+                                <div class="boardRow">
+                                        <a class="objava" href="board.php?title=<?= urlencode($board['title']) ?>">
+                                            <h2><?= htmlspecialchars($board['title']) ?></h2>
 
-            <div id="seznam-vrh">
-                <input class="index-filter-checkbox" id="index-filter-trending-checkbox" type="checkbox">
-                <label class="index-filter-label" for="index-filter-trending-checkbox">Trending ☰</label>
-                <div class="index-filter-div" id="index-filter-trending-div">
-                    <ul>
-                        <li><button>Most Popular</button></li>
-                        <li><button>Rising</button></li>
-                    </ul>
-                </div>
-            </div>
-            <div id="seznam">
-                <a class="objava">
-                    <img src="./media/logo1Pixel.png" alt="logo">
-                    <br>
-                    <p>#video, +3 files</p>
-                    <h1>Video urejanje</h1>
-                    <br>
-                    <p>Najboljše tehnike za montažo in postprodukcijo video vsebin</p>
-                    <br>
-                    <div class="objava-board-follow">
-                        <button class="objava-board-follow-button">FOLLOW</button>
+                                            <p class="small">
+                                                Followers: <?= (int)$board['followers'] ?>
+                                                · Posts: <?= (int)$board['posts'] ?>
+                                            </p>
+
+                                            <p><?= htmlspecialchars($board['description']) ?></p>
+
+                                            <p class="tags">
+                                                <?php foreach ($tagsByBoard[$board['id']] ?? [] as $tag): ?>
+                                                    <span class="tag">#<?= htmlspecialchars($tag) ?></span>
+                                                <?php endforeach; ?>
+                                            </p>
+                                        </a>
+
+                                        <?php if (isset($_SESSION['user_id'])): ?>
+                                        <form method="post" action="backend/php/toggleFollowBoard.php" class="followFrm">
+                                            <input type="hidden" name="board_id" value="<?= $board['id'] ?>">
+                                            <input type="hidden" name="url" value="<?= $_SERVER['PHP_SELF'] ?>">
+                                            <button class="followBtn">
+                                                <?= $isFollowing ? 'Unfollow' : 'Follow' ?>
+                                            </button>
+                                        </form>
+                                        <?php endif; ?>
+                                    </div>
+                            <?php endwhile; ?>
+                        </div>
                     </div>
-                </a>
-            </div>
+                </details>
+                <?php endif; ?>
+            <?php endif; ?>
+
+            <!--followed-->
+            <?php if ($flw && $flw->num_rows > 0): ?>
+                <details class="board-section" open>
+                    <summary>
+                        <span>Followed boards</span>
+                    </summary>
+
+                    <div class="section-content">
+                        <!-- board -->
+                        <div id="seznam">
+                            <?php while ($board = $flw->fetch_assoc()): $isFollowing = isset($followMap[$board['id']]); ?>
+                                <div class="boardRow">
+                                    <a class="objava" href="board.php?title=<?= urlencode($board['title']) ?>">
+                                        <h2><?= htmlspecialchars($board['title']) ?></h2>
+
+                                        <p class="small">
+                                            Followers: <?= (int)$board['followers'] ?>
+                                            · Posts: <?= (int)$board['posts'] ?>
+                                        </p>
+
+                                        <p><?= htmlspecialchars($board['description']) ?></p>
+
+                                        <p class="tags">
+                                            <?php foreach ($tagsByBoard[$board['id']] ?? [] as $tag): ?>
+                                                <span class="tag">#<?= htmlspecialchars($tag) ?></span>
+                                            <?php endforeach; ?>
+                                        </p>
+                                    </a>
+
+                                    <?php if (isset($_SESSION['user_id'])): ?>
+                                        <form method="post" action="backend/php/toggleFollowBoard.php" class="followFrm">
+                                            <input type="hidden" name="board_id" value="<?= $board['id'] ?>">
+                                            <input type="hidden" name="url" value="<?= $_SERVER['PHP_SELF'] ?>">
+                                            <button class="followBtn">
+                                                <?= $isFollowing ? 'Unfollow' : 'Follow' ?>
+                                            </button>
+                                        </form>
+                                    <?php endif; ?>
+                                </div>
+                            <?php endwhile; ?>
+                        </div>
+                    </div>
+                </details>
+            <?php endif; ?>
+
+            <!--my boards-->
+            <?php if ($myb && $myb->num_rows > 0): ?>
+                <details class="board-section" open>
+                    <summary>
+                        <span>My boards</span>
+                    </summary>
+
+                    <div class="section-content">
+                        <!-- board -->
+                        <div id="seznam">
+                            <?php while ($board = $myb->fetch_assoc()): $isFollowing = isset($followMap[$board['id']]); ?>
+                                <div class="boardRow">
+                                    <a class="objava" href="board.php?title=<?= urlencode($board['title']) ?>">
+                                        <h2><?= htmlspecialchars($board['title']) ?></h2>
+
+                                        <p class="small">
+                                            Followers: <?= (int)$board['followers'] ?>
+                                            · Posts: <?= (int)$board['posts'] ?>
+                                        </p>
+
+                                        <p><?= htmlspecialchars($board['description']) ?></p>
+
+                                        <p class="tags">
+                                            <?php foreach ($tagsByBoard[$board['id']] ?? [] as $tag): ?>
+                                                <span class="tag">#<?= htmlspecialchars($tag) ?></span>
+                                            <?php endforeach; ?>
+                                        </p>
+                                    </a>
+
+                                    <?php if (isset($_SESSION['user_id'])): ?>
+                                    <form method="post" action="backend/php/toggleFollowBoard.php" class="followFrm">
+                                        <input type="hidden" name="board_id" value="<?= $board['id'] ?>">
+                                            <input type="hidden" name="url" value="<?= $_SERVER['PHP_SELF'] ?>">
+                                        <button class="followBtn">
+                                            <?= $isFollowing ? 'Unfollow' : 'Follow' ?>
+                                        </button>
+                                    </form>
+                                    <?php endif; ?>
+                                </div>
+                            <?php endwhile; ?>
+                        </div>
+                    </div>
+                </details>
+            <?php endif; ?>
+
+            <!--top 5 boards-->
+            <details class="board-section" open>
+                <summary>
+                    <span>Top 5 boards</span>
+                </summary>
+
+                <div class="section-content">
+                    <!-- board -->
+                    <div id="seznam">
+                        <?php while ($board = $top5->fetch_assoc()): $isFollowing = isset($followMap[$board['id']]); ?>
+                            <div class="boardRow">
+                                <a class="objava" href="board.php?title=<?= urlencode($board['title']) ?>">
+                                    <h2><?= htmlspecialchars($board['title']) ?></h2>
+
+                                    <p class="small">
+                                        Followers: <?= (int)$board['followers'] ?>
+                                        · Posts: <?= (int)$board['posts'] ?>
+                                    </p>
+
+                                    <p><?= htmlspecialchars($board['description']) ?></p>
+
+                                    <p class="tags">
+                                        <?php foreach ($tagsByBoard[$board['id']] ?? [] as $tag): ?>
+                                            <span class="tag">#<?= htmlspecialchars($tag) ?></span>
+                                        <?php endforeach; ?>
+                                    </p>
+                                </a>
+
+                                <?php if (isset($_SESSION['user_id'])): ?>
+                                    <form method="post" action="backend/php/toggleFollowBoard.php" class="followFrm">
+                                        <input type="hidden" name="board_id" value="<?= $board['id'] ?>">
+                                            <input type="hidden" name="url" value="<?= $_SERVER['PHP_SELF'] ?>">
+                                        <button class="followBtn">
+                                            <?= $isFollowing ? 'Unfollow' : 'Follow' ?>
+                                        </button>
+                                    </form>
+                                <?php endif; ?>
+                            </div>
+                        <?php endwhile; ?>
+                    </div>
+                </div>
+            </details>
+
+            <!--top 5 most followed boards-->
+            <details class="board-section" open>
+                <summary>
+                    <span>Top 5 most followed boards</span>
+                </summary>
+
+                <div class="section-content">
+                    <!-- board -->
+                    <div id="seznam">
+                        <?php while ($board = $mfl5->fetch_assoc()): $isFollowing = isset($followMap[$board['id']]); ?>
+                            <div class="boardRow">
+                                <a class="objava" href="board.php?title=<?= urlencode($board['title']) ?>">
+                                    <h2><?= htmlspecialchars($board['title']) ?></h2>
+
+                                    <p class="small">
+                                        Followers: <?= (int)$board['followers'] ?>
+                                        · Posts: <?= (int)$board['posts'] ?>
+                                    </p>
+
+                                    <p><?= htmlspecialchars($board['description']) ?></p>
+
+                                    <p class="tags">
+                                        <?php foreach ($tagsByBoard[$board['id']] ?? [] as $tag): ?>
+                                            <span class="tag">#<?= htmlspecialchars($tag) ?></span>
+                                        <?php endforeach; ?>
+                                    </p>
+                                </a>
+
+                                <?php if (isset($_SESSION['user_id'])): ?>
+                                    <form method="post" action="backend/php/toggleFollowBoard.php" class="followFrm">
+                                        <input type="hidden" name="board_id" value="<?= $board['id'] ?>">
+                                            <input type="hidden" name="url" value="<?= $_SERVER['PHP_SELF'] ?>">
+                                        <button class="followBtn">
+                                            <?= $isFollowing ? 'Unfollow' : 'Follow' ?>
+                                        </button>
+                                    </form>
+                                <?php endif; ?>
+                            </div>
+                        <?php endwhile; ?>
+                    </div>
+                </div>
+            </details>
+
+            <!--top 5 new boards-->
+            <details class="board-section" open>
+                <summary>
+                    <span>Top 5 newest boards</span>
+                </summary>
+
+                <div class="section-content">
+                    <!-- board -->
+                    <div id="seznam">
+                        <?php while ($board = $new5->fetch_assoc()): $isFollowing = isset($followMap[$board['id']]); ?>
+                            <div class="boardRow">
+                                <a class="objava" href="board.php?title=<?= urlencode($board['title']) ?>">
+                                    <h2><?= htmlspecialchars($board['title']) ?></h2>
+
+                                    <p class="small">
+                                        Followers: <?= (int)$board['followers'] ?>
+                                        · Posts: <?= (int)$board['posts'] ?>
+                                    </p>
+
+                                    <p><?= htmlspecialchars($board['description']) ?></p>
+
+                                    <p class="tags">
+                                        <?php foreach ($tagsByBoard[$board['id']] ?? [] as $tag): ?>
+                                            <span class="tag">#<?= htmlspecialchars($tag) ?></span>
+                                        <?php endforeach; ?>
+                                    </p>
+                                </a>
+
+                                <?php if (isset($_SESSION['user_id'])): ?>
+                                    <form method="post" action="backend/php/toggleFollowBoard.php" class="followFrm">
+                                        <input type="hidden" name="board_id" value="<?= $board['id'] ?>">
+                                            <input type="hidden" name="url" value="<?= $_SERVER['PHP_SELF'] ?>">
+                                        <button class="followBtn">
+                                            <?= $isFollowing ? 'Unfollow' : 'Follow' ?>
+                                        </button>
+                                    </form>
+                                <?php endif; ?>
+                            </div>
+                        <?php endwhile; ?>
+                    </div>
+                </div>
+            </details>
+
+            <!--all boards-->
+            <details class="board-section" open>
+                <summary>
+                    <span>All boards</span>
+                </summary>
+
+                <div class="section-content">
+                    <!-- board -->
+                    <div id="seznam">
+                        <?php while ($board = $all->fetch_assoc()): $isFollowing = isset($followMap[$board['id']]); ?>
+                            <div class="boardRow">
+                                <a class="objava" href="board.php?title=<?= urlencode($board['title']) ?>">
+                                    <h2><?= htmlspecialchars($board['title']) ?></h2>
+
+                                    <p class="small">
+                                        Followers: <?= (int)$board['followers'] ?>
+                                        · Posts: <?= (int)$board['posts'] ?>
+                                    </p>
+
+                                    <p><?= htmlspecialchars($board['description']) ?></p>
+
+                                    <p class="tags">
+                                        <?php foreach ($tagsByBoard[$board['id']] ?? [] as $tag): ?>
+                                            <span class="tag">#<?= htmlspecialchars($tag) ?></span>
+                                        <?php endforeach; ?>
+                                    </p>
+                                </a>
+
+                                <?php if (isset($_SESSION['user_id'])): ?>
+                                    <form method="post" action="backend/php/toggleFollowBoard.php" class="followFrm">
+                                        <input type="hidden" name="board_id" value="<?= $board['id'] ?>">
+                                            <input type="hidden" name="url" value="<?= $_SERVER['PHP_SELF'] ?>">
+                                        <button class="followBtn">
+                                            <?= $isFollowing ? 'Unfollow' : 'Follow' ?>
+                                        </button>
+                                    </form>
+                                <?php endif; ?>
+                            </div>
+                        <?php endwhile; ?>
+                    </div>
+                </div>
+            </details>
+
+            <!-- Nov board -->
             <div id="boardobrazec">
                 <form method="post" action="backend/php/createBoard.php" id="bObrazec">
                     <div class="title-wrap">
