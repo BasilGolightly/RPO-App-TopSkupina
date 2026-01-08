@@ -125,7 +125,7 @@ CREATE TABLE board(
     title CHAR(50) NOT NULL,
     id_user int NOT NULL,
     description TEXT,
-    FOREIGN KEY (id_user) REFERENCES users(id)
+    FOREIGN KEY (id_user) REFERENCES users(id) ON DELETE CASCADE
 );
 
 -- BOARD TAG
