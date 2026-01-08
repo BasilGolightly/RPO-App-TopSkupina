@@ -106,7 +106,9 @@ CREATE TABLE comment(
     id_post int NOT NULL,
     content TEXT NOT NULL,
     id_comment int DEFAULT NULL /* za reply-je na drug comment */,
-    FOREIGN KEY (id_comment) REFERENCES comment(id) ON DELETE CASCADE
+    FOREIGN KEY (id_comment) REFERENCES comment(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_user) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_post) REFERENCES post(id) ON DELETE CASCADE
 );
 
 /*-------------------------BOARDS-------------------------*/

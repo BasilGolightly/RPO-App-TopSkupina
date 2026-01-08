@@ -42,6 +42,7 @@ $stmt2->close();
 $isBoardPost = false;
 $hasPfp = false;
 $hasAttachments = false;
+$hasComments = false;
 
 // (3) BOARD
 
@@ -100,6 +101,29 @@ if ($uploadCount > 0) {
     $uploads = $result5->fetch_all(MYSQLI_ASSOC);
 }
 
+// (6) COMMENTS
+$stmt6 = $conn->prepare(
+    "
+    SELECT c.id AS commentId, c.id_comment as parentId, 
+    c.content, u.id AS id_user, u.username AS username, 
+    filename, extension
+    FROM comment AS c JOIN users AS u
+        ON c.id_user = u.id LEFT JOIN pfp AS p
+        ON u.id = p.id_user LEFT JOIN upload up
+        ON p.id_upload = up.id 
+    WHERE c.id_post = ?
+    "
+);
+
+$stmt6->bind_param("i", $post_id);
+$stmt6->execute();
+$result6 = $stmt6->get_result();
+$comments;
+if($result6->num_rows > 0){
+    $hasComments = true;
+    $comments = $result6->fetch_all(MYSQLI_ASSOC);
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -129,11 +153,14 @@ if ($uploadCount > 0) {
             <div id="post-container">
                 <div id="post-info-container">
                     <div id="post-info" class="break-word">
+                        <!--TITLE-->
                         <h1 id='title'><?= htmlspecialchars($post['title']) ?></h1>
-
+                        
+                        <!--DESCRIPTION-->
                         <p id="big" style="margin-bottom: 1px;">Description</p>
                         <p><?= htmlspecialchars($post['content']) ?></p>
 
+                        <!--BOARDS-->
                         <div id="post-info-row">
                             <?php
                             if ($isBoardPost) {
@@ -145,6 +172,8 @@ if ($uploadCount > 0) {
                             ?>
 
                         </div>
+
+                        <!--TAGS-->
                         <p id="small">Tag(s): #tag1 #tag2</p>
                         <div id="post-info-row">
                             <?php
@@ -157,12 +186,16 @@ if ($uploadCount > 0) {
                             //$pfp_path = "./media/pfp/" . $pfp_filename : "./media/roach_grayscale.jpg";
                             ?>
                             <img id="profile" src="<?= htmlspecialchars($pfp_path) ?>" alt="Profile">
-                            <a id="big" style="margin-left: 20px;" <?php echo "href=profile.php?id='" . $author["id"] . "'"; ?>><?= htmlspecialchars($author['username']) ?></a>
+                            <a id="big" style="margin-left: 20px;" <?php echo "href=profile.php?id='" . $post['id_user'] . "'"; ?>><?= htmlspecialchars($author['username']) ?></a>
                         </div>
-                        <div id="post-info-row">
-                            <p id="big" style="margin-right: 10px;">Rate: </p>
-                            <h1>★★★☆☆</h1>
-                        </div>
+
+                        <!--RATING-->
+                        <?php if($post["id_user"] != $author["id"]): ?>
+                            <div id="post-info-row">
+                                <p id="big" style="margin-right: 10px;">Rate: </p>
+                                <h1>★★★☆☆</h1>
+                            </div>
+                        <?php endif; ?>
                     </div>
                     <div id="attachments" class="break-word">
                         <p id='big'>
@@ -197,9 +230,32 @@ if ($uploadCount > 0) {
                         </div>
                     </div>
                 </div>
+
+                <!--COMMENTS-->
                 <div id="comments-container">
                     <p id="big" style="margin-left: 10px;">Comments</p>
                     <div id="comments">
+                        <?php if(!$hasComments): ?>
+                            <p id="emptyCommentsMsg">No comments yet. Be the first one!</p>
+                        <?php else: ?>
+                            <?php foreach($comments as $comment): ?>
+                                <div id="comment">
+                                    <div id="comment-user">
+                                        <?php if(empty($comment["filename"])): ?>
+                                            <img id="comment-profile" src="<?= htmlspecialchars("./media/pfp/stock_pfp.png") ?>" alt="Profile">
+                                        <?php else: ?>
+                                            <img id="comment-profile" src="<?= htmlspecialchars("./media/pfp/" . $comment["filename"] . "." . $comment["extension"]) ?>" alt="Profile">
+                                        <?php endif; ?>
+                                            <a style="margin-left: 20px;" <?php echo "href='profile.php?id=" . $comment["id_user"] . "'";?>><?= htmlspecialchars($comment["username"]) ?></a>
+                                    </div>
+                                    <div id="comment-content">
+                                        <p><?= htmlspecialchars($comment["content"]) ?></p>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                        
+                        <!--
                         <div id="comment">
                             <div id="comment-user">
                                 <img id="comment-profile" src="<?= htmlspecialchars($pfp_path) ?>" alt="Profile">
@@ -218,19 +274,32 @@ if ($uploadCount > 0) {
                                 <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</p>
                             </div>
                         </div>
+                            -->
                     </div>
+
+                    <!-- ADD COMMENT -->
                     <form method="post" id="comment-form" action="./backend/php/createComment.php" style="align-items: center; margin-top: 10px;">
+                        <input type="hidden" name="p-Id" id="post-id" value="<?= $post_id ?>" readonly>
                         <input type="hidden" name="c-Id" id="parent-comment">
-                        <input type="text" name="new-comment" id="new-comment" placeholder="Add comment..." id="add-comment" required>
+                        <textarea name="new-comment" id="new-comment" placeholder="Add comment..." id="add-comment" required></textarea>
                         <br>
-                        <input type="submit" id="submit-btn" value="Komentiraj">
+                        <input type="submit" id="submit-btn" value="Komentiraj" class="commentBtn postButtons">
                     </form>
-                    <button id="report_button" type="button">Report</button>
-                    <form method="post" action="./backend/php/delete_post.php" style="display: inline;">
-                        <input type="hidden" name="post_id" value="<?= htmlspecialchars($post_id) ?>">
-                        <button id="delete_button" type="submit">Delete post</button>
-                    </form>
+                    <?php if($post["id_user"] != $author["id"]): ?>
+                        <button class="postButtons" id="report_button" type="button">Report</button>
+                    <?php endif; ?>
+                    <!-- ADD COMMENT, report -->
+                            
+                    <!--DELETE POST-->
+                    <?php if($post["id_user"] == $author["id"]): ?>
+                        <form method="post" action="./backend/php/delete_post.php" style="display: inline;">
+                            <input type="hidden" name="post_id" value="<?= htmlspecialchars($post_id) ?>">
+                            <button class="postButtons" id="delete_button" type="submit">Delete post</button>
+                        </form>
+                    <?php endif; ?>
+                    <!--DELETE POST-->
                 </div>
+                <!--COMMENTS-->
             </div>
         </main>
         <?php

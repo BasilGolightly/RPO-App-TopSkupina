@@ -163,9 +163,21 @@ main {
     margin-left: 10px;
 }
 
+#new-comment{
+    width: 50ch;
+    max-width: 50ch;
+    height: 5ch;
+}
+
+.postButtons{
+    margin-top: 15px !important;
+    padding: 7.5px !important;
+    width: 150px !important;
+}
+
 #report_button {
     margin-top: 10px;
-    width: 100px;
+    width: 150px;
     background-color: rgba(40, 220, 110, 0.20);
     color: white;
     border-radius: 10px;
@@ -173,10 +185,6 @@ main {
 }
 
 #delete_button {
-    margin-top: 10px;
-    margin-left: 10px;
-    width: 120px;
-    padding: 5px;
     background: rgba(220, 40, 40, 0.25);
     border: 2px solid rgba(255, 80, 80, 0.5);
     color: #ffb3b3;
@@ -185,5 +193,10 @@ main {
 
 #delete_button:hover {
     background: rgba(220, 40, 40, 0.35);
-    border-color: rgba(255, 80, 80, 0.7);
+    border-color: rgba(255, 80, 80, 0.7);    
+}
+
+#emptyCommentsMsg{
+    margin: 20px;
+    font-weight: bold;
 }
