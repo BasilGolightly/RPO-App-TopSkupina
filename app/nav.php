@@ -34,8 +34,13 @@
     </div>
     <div class="navDesno">
         <div id="nav-search">
-            <input id="seznam-search" placeholder="Search" type="text">
-            <button>🔍</button>
+            <!--<input id="seznam-search" placeholder="Search" type="text">
+            <button>🔍</button>-->
+            <form method="GET" action=""> 
+                <input id="seznam-search" placeholder="Search" type="text" name="q" value="<?= htmlspecialchars($_GET['q'] ?? '') ?>"> 
+                <button type="submit">🔍</button> 
+                <input type="hidden" name="context" value="<?= $searchContext ?? 'posts' ?>"> 
+            </form>
         </div>
         <button style="display: none">Prijava</button>
         <?php if (

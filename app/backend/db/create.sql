@@ -125,17 +125,30 @@ CREATE TABLE board(
     title CHAR(50) NOT NULL,
     id_user int NOT NULL,
     description TEXT,
+    created DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_user) REFERENCES users(id)
 );
 
 -- BOARD TAG
 DROP TABLE IF EXISTS board_tag;
 CREATE TABLE board_tag (
+    id INT AUTO_INCREMENT PRIMARY KEY,
     id_board INT NOT NULL,
     id_tag INT NOT NULL,
-    PRIMARY KEY (id_board, id_tag),
     FOREIGN KEY (id_board) REFERENCES board(id) ON DELETE CASCADE,
     FOREIGN KEY (id_tag) REFERENCES tag(id) ON DELETE CASCADE
+);
+
+-- BOARD FOLLOW
+DROP TABLE IF EXISTS board_follow;
+CREATE TABLE board_follow (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_user  INT NOT NULL,
+    id_board INT NOT NULL,
+    followed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (id_user) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_board) REFERENCES board(id) ON DELETE CASCADE
 );
 
 -- USER_BOARD 
