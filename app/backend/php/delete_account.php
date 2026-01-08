@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['username']) || !isset($_SESSION['role'])) {
-    header("Location: login.html");
+    header("Location: login.php");
     exit;
 }
 include "conn.php";
@@ -10,14 +10,12 @@ $id = $_SESSION['user_id'];
 
 $sql = "DELETE FROM users WHERE id = ?";
 $stmt = $conn->prepare($sql);
-if(!$stmt){
+if (!$stmt) {
     exit;
 }
 $stmt->bind_param("i", $id);
-if($stmt->execute()){
+if ($stmt->execute()) {
     header("Location: logout.php");
-}
-else{
+} else {
     exit("Database error.");
 }
-?>

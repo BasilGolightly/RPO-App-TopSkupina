@@ -126,7 +126,7 @@ CREATE TABLE board(
     id_user int NOT NULL,
     description TEXT,
     created DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_user) REFERENCES users(id)
+    FOREIGN KEY (id_user) REFERENCES users(id) ON DELETE CASCADE
 );
 
 -- BOARD TAG
