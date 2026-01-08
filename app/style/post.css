@@ -171,3 +171,19 @@ main {
     border-radius: 10px;
     border-color: rgba(120, 255, 160, 0.45);
 }
+
+#delete_button {
+    margin-top: 10px;
+    margin-left: 10px;
+    width: 120px;
+    padding: 5px;
+    background: rgba(220, 40, 40, 0.25);
+    border: 2px solid rgba(255, 80, 80, 0.5);
+    color: #ffb3b3;
+    border-radius: 12px;
+}
+
+#delete_button:hover {
+    background: rgba(220, 40, 40, 0.35);
+    border-color: rgba(255, 80, 80, 0.7);
+}

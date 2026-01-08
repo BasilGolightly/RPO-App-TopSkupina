@@ -55,7 +55,7 @@ $stmt3->bind_param("i", $post['id']);
 $stmt3->execute();
 $result3 = $stmt3->get_result();
 
-if($result3->num_rows > 0){
+if ($result3->num_rows > 0) {
     $isBoardPost = true;
 }
 
@@ -74,7 +74,7 @@ $stmt4->execute();
 $result4 = $stmt4->get_result();
 $pfpAssoc;
 
-if($result4->num_rows > 0){
+if ($result4->num_rows > 0) {
     $hasPfp = true;
     $pfpAssoc =  $result4->fetch_assoc();
 }
@@ -95,7 +95,7 @@ $result5 = $stmt5->get_result();
 $uploadCount = $result5->num_rows;
 $uploads;
 
-if($uploadCount > 0){
+if ($uploadCount > 0) {
     $hasAttachments = true;
     $uploads = $result5->fetch_all(MYSQLI_ASSOC);
 }
@@ -104,24 +104,26 @@ if($uploadCount > 0){
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./style/style.css" />
     <link rel="stylesheet" href="./style/post.css" />
     <title>
-    <?php
-    echo $post["title"] . " by " . $author["username"];
-    ?>  
+        <?php
+        echo $post["title"] . " by " . $author["username"];
+        ?>
     </title>
-    <style>  
+    <style>
     </style>
     <script src="backend/js/boardScript.js" defer></script>
 </head>
+
 <body>
     <div id="container">
         <?php
-            include "nav.php";
+        include "nav.php";
         ?>
         <main>
             <div id="post-container">
@@ -134,29 +136,28 @@ if($uploadCount > 0){
 
                         <div id="post-info-row">
                             <?php
-                                if($isBoardPost){
-                                    echo "
+                            if ($isBoardPost) {
+                                echo "
                                     <p id='small'>Board(s):</p>
                                     <br>
-                                    <a id='small' href='board.php?title=" . htmlspecialchars($boards['title']) . "'>" . htmlspecialchars(" " . $boards['title']) . "</a>"
-                                    ;    
-                                }
+                                    <a id='small' href='board.php?title=" . htmlspecialchars($boards['title']) . "'>" . htmlspecialchars(" " . $boards['title']) . "</a>";
+                            }
                             ?>
-                            
+
                         </div>
                         <p id="small">Tag(s): #tag1 #tag2</p>
                         <div id="post-info-row">
                             <?php
                             $pfp_path = "./media/pfp/";
                             $pfp_filename = "stock_pfp.png";
-                            if($hasPfp){
+                            if ($hasPfp) {
                                 $pfp_filename = $pfpAssoc["filename"] . "." . $pfpAssoc["extension"];
                             }
                             $pfp_path = $pfp_path . $pfp_filename;
                             //$pfp_path = "./media/pfp/" . $pfp_filename : "./media/roach_grayscale.jpg";
                             ?>
                             <img id="profile" src="<?= htmlspecialchars($pfp_path) ?>" alt="Profile">
-                            <a id="big" style="margin-left: 20px;" <?php echo "href=profile.php?id='" . $author["id"] ."'";?>><?= htmlspecialchars($author['username']) ?></a>
+                            <a id="big" style="margin-left: 20px;" <?php echo "href=profile.php?id='" . $author["id"] . "'"; ?>><?= htmlspecialchars($author['username']) ?></a>
                         </div>
                         <div id="post-info-row">
                             <p id="big" style="margin-right: 10px;">Rate: </p>
@@ -165,35 +166,32 @@ if($uploadCount > 0){
                     </div>
                     <div id="attachments" class="break-word">
                         <p id='big'>
-                        <?php 
+                            <?php
                             echo htmlspecialchars($uploadCount);
-                            if($uploadCount == 1){
-                                echo " Attachment"; 
-                            }
-                            else{
+                            if ($uploadCount == 1) {
+                                echo " Attachment";
+                            } else {
                                 echo " Attachments";
                             }
-                        ?>
+                            ?>
                         </p>
                         <div id="post-info-row">
                             <?php
-                                if($hasAttachments){
-                                    $filePath = "./media/";
-                                    if($isBoardPost){
-                                        $filePath = $filePath . "board/";        
-                                    }
-                                    else{
-                                        $filePath = $filePath . "post/";
-                                    }
-                                    foreach($uploads as $upload){
-                                        $filename = "upload" . $upload["id"] . "." . $upload["extension"];
-                                        $currPath = $filePath . $filename;
-                                        echo "<a href='" . $currPath . "' target='__blank__'>" . $filename . "</a>";
-                                    }
+                            if ($hasAttachments) {
+                                $filePath = "./media/";
+                                if ($isBoardPost) {
+                                    $filePath = $filePath . "board/";
+                                } else {
+                                    $filePath = $filePath . "post/";
                                 }
-                                else{
-                                    echo "<p>There are no attachments.</p>";
+                                foreach ($uploads as $upload) {
+                                    $filename = "upload" . $upload["id"] . "." . $upload["extension"];
+                                    $currPath = $filePath . $filename;
+                                    echo "<a href='" . $currPath . "' target='__blank__'>" . $filename . "</a>";
                                 }
+                            } else {
+                                echo "<p>There are no attachments.</p>";
+                            }
                             ?>
 
                         </div>
@@ -222,18 +220,23 @@ if($uploadCount > 0){
                         </div>
                     </div>
                     <form method="post" id="comment-form" action="./backend/php/createComment.php" style="align-items: center; margin-top: 10px;">
-                        <input type="hidden" name="c-Id" id="parent-comment"> 
+                        <input type="hidden" name="c-Id" id="parent-comment">
                         <input type="text" name="new-comment" id="new-comment" placeholder="Add comment..." id="add-comment" required>
                         <br>
-                        <input type="submit" id="submit-btn" value="Komentiraj">      
-                    <form>
-                    <button id="report_button">Report</button> 
+                        <input type="submit" id="submit-btn" value="Komentiraj">
+                    </form>
+                    <button id="report_button" type="button">Report</button>
+                    <form method="post" action="./backend/php/delete_post.php" style="display: inline;">
+                        <input type="hidden" name="post_id" value="<?= htmlspecialchars($post_id) ?>">
+                        <button id="delete_button" type="submit">Delete post</button>
+                    </form>
                 </div>
             </div>
         </main>
         <?php
-            include "footer.php";
+        include "footer.php";
         ?>
     </div>
 </body>
+
 </html>
