@@ -119,7 +119,7 @@ $stmt6->bind_param("i", $post_id);
 $stmt6->execute();
 $result6 = $stmt6->get_result();
 $comments;
-if($result6->num_rows > 0){
+if ($result6->num_rows > 0) {
     $hasComments = true;
     $comments = $result6->fetch_all(MYSQLI_ASSOC);
 }
@@ -155,7 +155,7 @@ if($result6->num_rows > 0){
                     <div id="post-info" class="break-word">
                         <!--TITLE-->
                         <h1 id='title'><?= htmlspecialchars($post['title']) ?></h1>
-                        
+
                         <!--DESCRIPTION-->
                         <p id="big" style="margin-bottom: 1px;">Description</p>
                         <p><?= htmlspecialchars($post['content']) ?></p>
@@ -190,7 +190,7 @@ if($result6->num_rows > 0){
                         </div>
 
                         <!--RATING-->
-                        <?php if($post["id_user"] != $author["id"]): ?>
+                        <?php if ($post["id_user"] != $author["id"]): ?>
                             <div id="post-info-row">
                                 <p id="big" style="margin-right: 10px;">Rate: </p>
                                 <h1>★★★☆☆</h1>
@@ -235,26 +235,34 @@ if($result6->num_rows > 0){
                 <div id="comments-container">
                     <p id="big" style="margin-left: 10px;">Comments</p>
                     <div id="comments">
-                        <?php if(!$hasComments): ?>
+                        <?php if (!$hasComments): ?>
                             <p id="emptyCommentsMsg">No comments yet. Be the first one!</p>
                         <?php else: ?>
-                            <?php foreach($comments as $comment): ?>
+                            <?php foreach ($comments as $comment): ?>
                                 <div id="comment">
                                     <div id="comment-user">
-                                        <?php if(empty($comment["filename"])): ?>
+                                        <?php if (empty($comment["filename"])): ?>
                                             <img id="comment-profile" src="<?= htmlspecialchars("./media/pfp/stock_pfp.png") ?>" alt="Profile">
                                         <?php else: ?>
                                             <img id="comment-profile" src="<?= htmlspecialchars("./media/pfp/" . $comment["filename"] . "." . $comment["extension"]) ?>" alt="Profile">
                                         <?php endif; ?>
-                                            <a style="margin-left: 20px;" <?php echo "href='profile.php?id=" . $comment["id_user"] . "'";?>><?= htmlspecialchars($comment["username"]) ?></a>
+                                        <a style="margin-left: 20px;" <?php echo "href='profile.php?id=" . $comment["id_user"] . "'"; ?>><?= htmlspecialchars($comment["username"]) ?></a>
                                     </div>
                                     <div id="comment-content">
+
                                         <p><?= htmlspecialchars($comment["content"]) ?></p>
+                                        <?php if (isset($_SESSION["user_id"]) && (int)$comment["id_user"] === (int)$_SESSION["user_id"]): ?>
+                                            <form method="post" action="./backend/php/delete_post_comment.php" class="comment-delete">
+                                                <input type="hidden" name="comment_id" value=<?= htmlspecialchars($comment["commentId"]) ?>>
+                                                <input type="hidden" name="post_id" value="<?= htmlspecialchars($post_id) ?>">
+                                                <button type="submit" class="delete-button"></button>
+                                            </form>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             <?php endforeach; ?>
                         <?php endif; ?>
-                        
+
                         <!--
                         <div id="comment">
                             <div id="comment-user">
@@ -285,16 +293,16 @@ if($result6->num_rows > 0){
                         <br>
                         <input type="submit" id="submit-btn" value="Komentiraj" class="commentBtn postButtons">
                     </form>
-                    <?php if($post["id_user"] != $author["id"]): ?>
+                    <?php if ($post["id_user"] != $author["id"]): ?>
                         <button class="postButtons" id="report_button" type="button">Report</button>
                     <?php endif; ?>
                     <!-- ADD COMMENT, report -->
-                            
+
                     <!--DELETE POST-->
-                    <?php if($post["id_user"] == $author["id"]): ?>
+                    <?php if ($post["id_user"] == $author["id"]): ?>
                         <form method="post" action="./backend/php/delete_post.php" style="display: inline;">
                             <input type="hidden" name="post_id" value="<?= htmlspecialchars($post_id) ?>">
-                            <button class="postButtons" id="delete_button" type="submit">Delete post</button>
+                            <button class="postButtons delete-button" id="delete_button" type="submit">Delete post</button>
                         </form>
                     <?php endif; ?>
                     <!--DELETE POST-->

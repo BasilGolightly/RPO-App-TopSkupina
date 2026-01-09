@@ -154,6 +154,11 @@ main {
   flex: 2;
   display: flex;
   align-items: center;
+  gap: 12px;
+}
+
+#comment-content p {
+    margin: 0;
 }
 
 #comment-profile {
@@ -185,18 +190,38 @@ main {
 }
 
 #delete_button {
-    background: rgba(220, 40, 40, 0.25);
-    border: 2px solid rgba(255, 80, 80, 0.5);
-    color: #ffb3b3;
     border-radius: 12px;
-}
-
-#delete_button:hover {
-    background: rgba(220, 40, 40, 0.35);
-    border-color: rgba(255, 80, 80, 0.7);    
 }
 
 #emptyCommentsMsg{
     margin: 20px;
     font-weight: bold;
+}
+
+.comment-delete {
+    margin-left: auto;
+}
+
+.delete-button {
+    background: rgba(220, 40, 40, 0.25);
+    border: 2px solid rgba(255, 80, 80, 0.5);
+    color: #ffb3b3;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.comment-delete .delete-button {
+    padding: 4px 10px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+.delete-button:empty::before {
+    content: "Delete";
+}
+
+.delete-button:hover {
+    background: rgba(220, 40, 40, 0.35);
+    border-color: rgba(255, 80, 80, 0.7);
 }
