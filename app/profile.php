@@ -70,6 +70,7 @@ $conn->close();
                         <button class="tablinks" onclick="openTab(event, 'Posts')">Posts</button>
                     </div>
 
+                    <!--ACCOUNT INFO-->
                     <div id="Account" class="tabcontent">
                         <div class="insidetab">Account details</div>
                         <hr>
@@ -121,7 +122,10 @@ $conn->close();
                             </form>
                         </div>
                     </div>
+                    <!--ACCOUNT INFO-->
 
+
+                    <!--SETTINGS-->
                     <div id="Settings" class="tabcontent">
                         <div class="insidetab">Settings</div>
                         <hr>
@@ -161,7 +165,9 @@ $conn->close();
                             </button>
                         </div>
                     </div>
+                    <!--SETTINGS-->
 
+                    <!--POSTS-->
                     <div id="Posts" class="tabcontent">
                         <div class="insidetab">Posts</div>
                         <hr>
@@ -176,7 +182,11 @@ $conn->close();
                             <?php endforeach; ?>
                         <?php endif; ?>
                     </div>
+                    <!--POSTS-->
 
+                    <!--ADMIN BOARD-->
+                        <!--TO DO-->
+                    <!--ADMIN BOARD-->
                 </div>
             </div>
         </main>
