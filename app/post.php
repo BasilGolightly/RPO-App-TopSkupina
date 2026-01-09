@@ -154,6 +154,7 @@ if ($result6->num_rows > 0) {
             <div id="post-container">
                 <!--POST CONTENT-->
                 <div id="post-info-container">
+                    <!-- TEXT -->
                     <div id="post-info" class="break-word">
 
                         <!--TITLE-->
@@ -217,6 +218,7 @@ if ($result6->num_rows > 0) {
                             </div>
                         <?php endif; ?>
                     </div>
+                    <!-- TEXT -->
 
                     <!--FILES-->
                     <div id="attachments" class="break-word">
@@ -286,6 +288,7 @@ if ($result6->num_rows > 0) {
                 <!--COMMENTS-->
                 <div id="comments-container">
                     <p id="big" style="margin-left: 10px;">Comments</p>
+                    <!-- COMMENTS -->
                     <div id="comments">
                         <?php if (!$hasComments): ?>
                             <p id="emptyCommentsMsg">No comments yet. Be the first one!</p>
@@ -314,28 +317,8 @@ if ($result6->num_rows > 0) {
                                 </div>
                             <?php endforeach; ?>
                         <?php endif; ?>
-
-                        <!--
-                        <div id="comment">
-                            <div id="comment-user">
-                                <img id="comment-profile" src="<?= htmlspecialchars($pfp_path) ?>" alt="Profile">
-                                <p style="margin-left: 20px;">Username1</p>
-                            </div>
-                            <div id="comment-content">
-                                <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</p>
-                            </div>
-                        </div>
-                        <div id="comment" style="border-radius: 12px;">
-                            <div id="comment-user">
-                                <img id="comment-profile" src="<?= htmlspecialchars($pfp_path) ?>" alt="Profile">
-                                <p style="margin-left: 20px;">Username2</p>
-                            </div>
-                            <div id="comment-content">
-                                <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</p>
-                            </div>
-                        </div>
-                            -->
                     </div>
+                    <!-- COMMENTS -->
 
                     <!-- ADD COMMENT -->
                     <form method="post" id="comment-form" action="./backend/php/createComment.php" style="align-items: center; margin-top: 10px;">

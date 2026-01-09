@@ -3,6 +3,7 @@ include "conn.php";
 session_start();
 if (!isset($_SESSION["user_id"]) || !isset($_SESSION["username"]) || !isset($_SESSION["role"])) {
     header("Location: ../../index.php");
+    die();
 }
 
 if($_SERVER['REQUEST_METHOD'] == "POST"){
@@ -27,18 +28,13 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         $stmt->bind_param("iis", $user_id, $post_id, $commentContent);
     }    
 
-    /*
-    $stmt = $conn->prepare("
-        INSERT INTO comment (id_user, id_post, content, id_comment)
-        VALUES (?, ?, ?, NULL)
-        ");
-        $stmt->bind_param("iis", $user_id, $post_id, $commentContent);
-    */
-
     $stmt->execute();
     $stmt->close();
     header("Location: ../../post.php?id=" . $post_id);
+    die();
 }
 $error = "No post provided!";
-header("Location: ../../index.php?error=" . htmlspecialchars($error));
+$_SESSION["error"] = $error;
+header("Location: ../../index.php");
+die();
 ?>
