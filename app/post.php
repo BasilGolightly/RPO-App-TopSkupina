@@ -165,6 +165,7 @@ if ($result6->num_rows > 0) {
                                 <button type="button" class="editBtn" id="titleBtn">Edit title</button>
                             <?php endif; ?>
                         </form>
+                        <!--TITLE-->
 
                         <!--DESCRIPTION-->
                         <form method="post" id="contentForm" class="contentCon" action="./backend/php/editContent.php">
@@ -300,7 +301,15 @@ if ($result6->num_rows > 0) {
                                         <a style="margin-left: 20px;" <?php echo "href='profile.php?id=" . $comment["id_user"] . "'"; ?>><?= htmlspecialchars($comment["username"]) ?></a>
                                     </div>
                                     <div id="comment-content">
+
                                         <p><?= htmlspecialchars($comment["content"]) ?></p>
+                                        <?php if (isset($_SESSION["user_id"]) && (int)$comment["id_user"] === (int)$_SESSION["user_id"]): ?>
+                                            <form method="post" action="./backend/php/delete_post_comment.php" class="comment-delete">
+                                                <input type="hidden" name="comment_id" value=<?= htmlspecialchars($comment["commentId"]) ?>>
+                                                <input type="hidden" name="post_id" value="<?= htmlspecialchars($post_id) ?>">
+                                                <button type="submit" class="delete-button"></button>
+                                            </form>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             <?php endforeach; ?>
@@ -345,7 +354,7 @@ if ($result6->num_rows > 0) {
                     <?php if ($post["id_user"] == $author["id"]): ?>
                         <form method="post" action="./backend/php/delete_post.php" style="display: inline;">
                             <input type="hidden" name="post_id" value="<?= htmlspecialchars($post_id) ?>">
-                            <button class="postButtons" id="delete_button" type="submit">Delete post</button>
+                            <button class="postButtons delete-button" id="delete_button" type="submit">Delete post</button>
                         </form>
                     <?php endif; ?>
                     <!--DELETE POST-->
