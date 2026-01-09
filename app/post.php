@@ -240,12 +240,12 @@ if ($result6->num_rows > 0) {
                                     <span class="sub"><i>(max. 5 MB, <span id="fileCount"><?= 5 - $uploadCount ?></span> files allowed)</i></span>
                                 </div>
                                 <div class="file-wrap">
-                                    <?php if($isBoardPost): ?>
+                                    <?php if ($isBoardPost): ?>
                                         <input type="hidden" name="is_board_post" value="1">
-                                    <?php else:?>
+                                    <?php else: ?>
                                         <input type="hidden" name="is_board_post" value="0">
                                     <?php endif; ?>
-                                    <input type="hidden" name="allowed_count" value="<?=  5 - $uploadCount ?>">
+                                    <input type="hidden" name="allowed_count" value="<?= 5 - $uploadCount ?>">
                                     <input type="hidden" name="post_id" value="<?= $post_id ?>">
                                     <label for="bFiles" class="custom-file-upload postUpload">
                                         <img src="./media/logo1.png" height="13" width="13"><span id="uploadText"> Choose files</span>
@@ -270,8 +270,7 @@ if ($result6->num_rows > 0) {
                                     echo "
                                     <div class='post-info-row'>
                                         <a href='" . $currPath . "' target='__blank__'>" . $filename . "</a>" .
-                                    "</div>"
-                                    ;
+                                        "</div>";
                                     //echo "<br>";
                                 }
                             } else {
@@ -307,10 +306,19 @@ if ($result6->num_rows > 0) {
 
                                         <p><?= htmlspecialchars($comment["content"]) ?></p>
                                         <?php if (isset($_SESSION["user_id"]) && (int)$comment["id_user"] === (int)$_SESSION["user_id"]): ?>
+
+                                            <form id="edit_comment_form" method="post" action="./backend/php/edit_post_comment.php">
+                                                <button class="edit_button" type="button" id="edit_comment_button"> Edit</button>
+                                                <input type="hidden" name="comment_id" value=<?= htmlspecialchars($comment["commentId"]) ?>>
+                                                <input type="hidden" name="post_id" value="<?= htmlspecialchars($post_id) ?>">
+                                                <div id="edit_comment_container" class="hidden">
+                                                    <input type="text" name="new_comment" id="edit_comment_label">
+                                                </div>
+                                            </form>
                                             <form method="post" action="./backend/php/delete_post_comment.php" class="comment-delete">
                                                 <input type="hidden" name="comment_id" value=<?= htmlspecialchars($comment["commentId"]) ?>>
                                                 <input type="hidden" name="post_id" value="<?= htmlspecialchars($post_id) ?>">
-                                                <button type="submit" class="delete-button"></button>
+                                                <button type="submit" class="delete-button">Delete</button>
                                             </form>
                                         <?php endif; ?>
                                     </div>
@@ -335,6 +343,8 @@ if ($result6->num_rows > 0) {
 
                     <!--DELETE POST-->
                     <?php if ($post["id_user"] == $author["id"]): ?>
+
+
                         <form method="post" action="./backend/php/delete_post.php" style="display: inline;">
                             <input type="hidden" name="post_id" value="<?= htmlspecialchars($post_id) ?>">
                             <button class="postButtons delete-button" id="delete_button" type="submit">Delete post</button>
@@ -351,9 +361,28 @@ if ($result6->num_rows > 0) {
     </div>
     <script>
         let error = "<?= htmlspecialchars($_SESSION["error"]) ?>";
-        if(error.trim() != ""){
+        if (error.trim() != "") {
             alert(error);
         }
+
+        document.querySelectorAll("#edit_comment_form").forEach((form) => {
+            const btn = form.querySelector("#edit_comment_button");
+            const container = form.querySelector("#edit_comment_container");
+            const label = form.querySelector("#edit_comment_label");
+            if (!btn || !container || !label) {
+                return;
+            }
+            let is_input_hidden = true;
+            btn.addEventListener("click", () => {
+                if (is_input_hidden) {
+                    container.classList.remove("hidden");
+                    label.focus();
+                    is_input_hidden = false;
+                } else {
+                    form.submit();
+                }
+            });
+        });
     </script>
 </body>
 
