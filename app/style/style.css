@@ -50,7 +50,7 @@ input[type="text"]:focus, input[type="password"]:focus{
     border-color: var(--sub-color);
 }
 
-input[type="submit"], .submitBtn, .custom-file-upload{
+input[type="submit"], .submitBtn, .custom-file-upload, .editBtn, .fileUploadBtn{
     margin-top: 6px;
     padding: 10px 12px;
     border-radius: 12px;

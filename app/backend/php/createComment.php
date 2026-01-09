@@ -39,4 +39,6 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     $stmt->close();
     header("Location: ../../post.php?id=" . $post_id);
 }
+$error = "No post provided!";
+header("Location: ../../index.php?error=" . htmlspecialchars($error));
 ?>

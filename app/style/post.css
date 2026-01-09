@@ -98,7 +98,7 @@ main {
     padding: 20px;
 }
 
-#title h1 {
+#title h1, #title{
     font-size: 3rem;
 }
 
@@ -116,7 +116,7 @@ main {
     width: 80px
 }
 
-#post-info-row {
+#post-info-row, .post-info-row {
     align-items: center;
     display: flex;
     flex-direction: row;
@@ -200,3 +200,36 @@ main {
     margin: 20px;
     font-weight: bold;
 }
+
+.readonly{
+    background: transparent !important;
+    margin: 0;
+    padding: 0 !important;
+}
+
+#content{
+    margin-top: 10px;
+    width: 75%;
+    font-size: 1em;
+}
+
+#bFiles{
+    display: none;
+}
+
+.postUpload, .fileUploadBtn{
+    width: 150px !important;
+}
+
+
+.attachments-container{
+    display: flex;
+    flex-direction: column !important;
+}
+
+.attachments-container > div{
+    margin-bottom: 10px;
+}
+
+
+

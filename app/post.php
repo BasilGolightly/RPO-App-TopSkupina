@@ -119,7 +119,7 @@ $stmt6->bind_param("i", $post_id);
 $stmt6->execute();
 $result6 = $stmt6->get_result();
 $comments;
-if($result6->num_rows > 0){
+if ($result6->num_rows > 0) {
     $hasComments = true;
     $comments = $result6->fetch_all(MYSQLI_ASSOC);
 }
@@ -142,6 +142,7 @@ if($result6->num_rows > 0){
     <style>
     </style>
     <script src="backend/js/boardScript.js" defer></script>
+    <script src="./backend/js/postScript.js" defer></script>
 </head>
 
 <body>
@@ -151,14 +152,31 @@ if($result6->num_rows > 0){
         ?>
         <main>
             <div id="post-container">
+                <!--POST CONTENT-->
                 <div id="post-info-container">
                     <div id="post-info" class="break-word">
+
                         <!--TITLE-->
-                        <h1 id='title'><?= htmlspecialchars($post['title']) ?></h1>
-                        
+                        <form method="post" class="titleCon" id="titleForm" action="./backend/php/editTitle.php">
+                            <input type="hidden" name="post_id" value="<?= $post_id ?>">
+                            <input type="text" class="readonly" name="title" id="title" readonly value="<?= htmlspecialchars($post['title']) ?>">
+                            <?php if ($post["id_user"] == $author["id"]): ?>
+                                <br>
+                                <button type="button" class="editBtn" id="titleBtn">Edit title</button>
+                            <?php endif; ?>
+                        </form>
+
                         <!--DESCRIPTION-->
-                        <p id="big" style="margin-bottom: 1px;">Description</p>
-                        <p><?= htmlspecialchars($post['content']) ?></p>
+                        <form method="post" id="contentForm" class="contentCon" action="./backend/php/editContent.php">
+                            <input type="hidden" name="post_id" value="<?= $post_id ?>">
+                            <p id="big" style="margin-bottom: 1px;">Content</p>
+                            <textarea id="content" name="content" class="readonly" readonly><?= htmlspecialchars($post['content']) ?></textarea>
+                            <?php if ($post["id_user"] == $author["id"]): ?>
+                                <br>
+                                <button type="button" class="editBtn" id="contentBtn">Edit Content</button>
+                            <?php endif; ?>
+                        </form>
+                        <!--DESCRIPTION-->
 
                         <!--BOARDS-->
                         <div id="post-info-row">
@@ -167,11 +185,11 @@ if($result6->num_rows > 0){
                                 echo "
                                     <p id='small'>Board(s):</p>
                                     <br>
-                                    <a id='small' href='board.php?title=" . htmlspecialchars($boards['title']) . "'>" . htmlspecialchars(" " . $boards['title']) . "</a>";
+                                    <a id='small' target='__blank__' href='board.php?title=" . htmlspecialchars($boards['title']) . "'>" . htmlspecialchars(" " . $boards['title']) . "</a>";
                             }
                             ?>
-
                         </div>
+                        <!--BOARDS-->
 
                         <!--TAGS-->
                         <p id="small">Tag(s): #tag1 #tag2</p>
@@ -188,15 +206,18 @@ if($result6->num_rows > 0){
                             <img id="profile" src="<?= htmlspecialchars($pfp_path) ?>" alt="Profile">
                             <a id="big" style="margin-left: 20px;" <?php echo "href=profile.php?id='" . $post['id_user'] . "'"; ?>><?= htmlspecialchars($author['username']) ?></a>
                         </div>
+                        <!--TAGS-->
 
                         <!--RATING-->
-                        <?php if($post["id_user"] != $author["id"]): ?>
+                        <?php if ($post["id_user"] != $author["id"]): ?>
                             <div id="post-info-row">
                                 <p id="big" style="margin-right: 10px;">Rate: </p>
                                 <h1>★★★☆☆</h1>
                             </div>
                         <?php endif; ?>
                     </div>
+
+                    <!--FILES-->
                     <div id="attachments" class="break-word">
                         <p id='big'>
                             <?php
@@ -208,7 +229,30 @@ if($result6->num_rows > 0){
                             }
                             ?>
                         </p>
-                        <div id="post-info-row">
+                        <?php if ($post["id_user"] == $author["id"] && $uploadCount < 5): ?>
+                            <form id="fileForm" method="post" action="./backend/php/editFiles.php" enctype="multipart/form-data">
+                                <div class="file-title">
+                                    UPLOAD FILES
+                                    <br>
+                                    <span class="sub"><i>(max. 5 MB, <span id="fileCount"><?= 5 - $uploadCount ?></span> files allowed)</i></span>
+                                </div>
+                                <div class="file-wrap">
+                                    <?php if($isBoardPost): ?>
+                                        <input type="hidden" name="is_board_post" value="1">
+                                    <?php else:?>
+                                        <input type="hidden" name="is_board_post" value="0">
+                                    <?php endif; ?>
+                                    <input type="hidden" name="allowed_count" value="<?=  5 - $uploadCount ?>">
+                                    <input type="hidden" name="post_id" value="<?= $post_id ?>">
+                                    <label for="bFiles" class="custom-file-upload postUpload">
+                                        <img src="./media/logo1.png" height="13" width="13"><span id="uploadText"> Choose files</span>
+                                    </label>
+                                    <input type="file" id="bFiles" name="bFiles[]" multiple>
+                                    <button class="fileUploadBtn" type="submit">UPLOAD FILES</button>
+                                </div>
+                            </form>
+                        <?php endif; ?>
+                        <div class="attachments-container">
                             <?php
                             if ($hasAttachments) {
                                 $filePath = "./media/";
@@ -220,33 +264,40 @@ if($result6->num_rows > 0){
                                 foreach ($uploads as $upload) {
                                     $filename = "upload" . $upload["id"] . "." . $upload["extension"];
                                     $currPath = $filePath . $filename;
-                                    echo "<a href='" . $currPath . "' target='__blank__'>" . $filename . "</a>";
+                                    echo "
+                                    <div class='post-info-row'>
+                                        <a href='" . $currPath . "' target='__blank__'>" . $filename . "</a>" .
+                                    "</div>"
+                                    ;
+                                    //echo "<br>";
                                 }
                             } else {
                                 echo "<p>There are no attachments.</p>";
                             }
                             ?>
-
                         </div>
+
                     </div>
+                    <!--FILES-->
                 </div>
+                <!--POST CONTENT-->
 
                 <!--COMMENTS-->
                 <div id="comments-container">
                     <p id="big" style="margin-left: 10px;">Comments</p>
                     <div id="comments">
-                        <?php if(!$hasComments): ?>
+                        <?php if (!$hasComments): ?>
                             <p id="emptyCommentsMsg">No comments yet. Be the first one!</p>
                         <?php else: ?>
-                            <?php foreach($comments as $comment): ?>
+                            <?php foreach ($comments as $comment): ?>
                                 <div id="comment">
                                     <div id="comment-user">
-                                        <?php if(empty($comment["filename"])): ?>
+                                        <?php if (empty($comment["filename"])): ?>
                                             <img id="comment-profile" src="<?= htmlspecialchars("./media/pfp/stock_pfp.png") ?>" alt="Profile">
                                         <?php else: ?>
                                             <img id="comment-profile" src="<?= htmlspecialchars("./media/pfp/" . $comment["filename"] . "." . $comment["extension"]) ?>" alt="Profile">
                                         <?php endif; ?>
-                                            <a style="margin-left: 20px;" <?php echo "href='profile.php?id=" . $comment["id_user"] . "'";?>><?= htmlspecialchars($comment["username"]) ?></a>
+                                        <a style="margin-left: 20px;" <?php echo "href='profile.php?id=" . $comment["id_user"] . "'"; ?>><?= htmlspecialchars($comment["username"]) ?></a>
                                     </div>
                                     <div id="comment-content">
                                         <p><?= htmlspecialchars($comment["content"]) ?></p>
@@ -254,7 +305,7 @@ if($result6->num_rows > 0){
                                 </div>
                             <?php endforeach; ?>
                         <?php endif; ?>
-                        
+
                         <!--
                         <div id="comment">
                             <div id="comment-user">
@@ -285,13 +336,13 @@ if($result6->num_rows > 0){
                         <br>
                         <input type="submit" id="submit-btn" value="Komentiraj" class="commentBtn postButtons">
                     </form>
-                    <?php if($post["id_user"] != $author["id"]): ?>
+                    <?php if ($post["id_user"] != $author["id"]): ?>
                         <button class="postButtons" id="report_button" type="button">Report</button>
                     <?php endif; ?>
                     <!-- ADD COMMENT, report -->
-                            
+
                     <!--DELETE POST-->
-                    <?php if($post["id_user"] == $author["id"]): ?>
+                    <?php if ($post["id_user"] == $author["id"]): ?>
                         <form method="post" action="./backend/php/delete_post.php" style="display: inline;">
                             <input type="hidden" name="post_id" value="<?= htmlspecialchars($post_id) ?>">
                             <button class="postButtons" id="delete_button" type="submit">Delete post</button>
@@ -306,6 +357,12 @@ if($result6->num_rows > 0){
         include "footer.php";
         ?>
     </div>
+    <script>
+        let error = "<?= htmlspecialchars($_SESSION["error"]) ?>";
+        if(error.trim() != ""){
+            alert(error);
+        }
+    </script>
 </body>
 
 </html>

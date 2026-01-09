@@ -33,7 +33,7 @@ CREATE TABLE follow(
     id int AUTO_INCREMENT PRIMARY KEY,
     id_user1 int NOT NULL,
     id_user2 int NOT NULL,
-    accepted tinyint NOT NULL,
+    accepted tinyint NOT NULL DEFAULT 0,
     FOREIGN KEY (id_user1) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (id_user2) REFERENCES users(id) ON DELETE CASCADE
 );
