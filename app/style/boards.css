@@ -132,7 +132,7 @@ main {
   transition: 0.1s;
   align-items: center;
   box-sizing: border-box;
-  padding: 0.5rem;
+  padding: 1rem;
 }
 
 #seznam a:hover {

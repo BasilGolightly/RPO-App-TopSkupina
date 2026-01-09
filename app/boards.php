@@ -264,11 +264,11 @@
                                     <a class="objava" href="board.php?title=<?= urlencode($board['title']) ?>">
                                         <h2><?= htmlspecialchars($board['title']) ?></h2>
 
-                                        <p class="small">
-                                            Followers: <?= (int)$board['followers'] ?>
-                                            · Posts: <?= (int)$board['posts'] ?>
+                                        <p style="font-size: 1rem;" class="small">
+                                            Followers: <strong><?= (int)$board['followers'] ?></strong>
+                                            · Posts: <strong><?= (int)$board['posts'] ?></strong>
                                         </p>
-
+                                        <br>
                                         <p><?= htmlspecialchars($board['description']) ?></p>
 
                                         <p class="tags">
@@ -276,17 +276,17 @@
                                                 <span class="tag">#<?= htmlspecialchars($tag) ?></span>
                                             <?php endforeach; ?>
                                         </p>
-                                    </a>
 
-                                    <?php if (isset($_SESSION['user_id'])): ?>
-                                        <form method="post" action="backend/php/toggleFollowBoard.php" class="followFrm">
-                                            <input type="hidden" name="board_id" value="<?= $board['id'] ?>">
-                                            <input type="hidden" name="url" value="<?= $_SERVER['PHP_SELF'] ?>">
-                                            <button class="followBtn">
-                                                <?= $isFollowing ? 'Unfollow' : 'Follow' ?>
-                                            </button>
-                                        </form>
-                                    <?php endif; ?>
+                                        <?php if (isset($_SESSION['user_id'])): ?>
+                                            <form method="post" action="backend/php/toggleFollowBoard.php" class="followFrm">
+                                                <input type="hidden" name="board_id" value="<?= $board['id'] ?>">
+                                                <input type="hidden" name="url" value="<?= $_SERVER['PHP_SELF'] ?>">
+                                                <button class="followBtn">
+                                                    <?= $isFollowing ? 'Unfollow' : 'Follow' ?>
+                                                </button>
+                                            </form>
+                                        <?php endif; ?>
+                                    </a>
                                 </div>
                             <?php endwhile; ?>
                         </div>
@@ -309,11 +309,11 @@
                                     <a class="objava" href="board.php?title=<?= urlencode($board['title']) ?>">
                                         <h2><?= htmlspecialchars($board['title']) ?></h2>
 
-                                        <p class="small">
-                                            Followers: <?= (int)$board['followers'] ?>
-                                            · Posts: <?= (int)$board['posts'] ?>
+                                        <p style="font-size: 1rem;" class="small">
+                                            Followers: <strong><?= (int)$board['followers'] ?></strong>
+                                            · Posts: <strong><?= (int)$board['posts'] ?></strong>
                                         </p>
-
+                                        <br>
                                         <p><?= htmlspecialchars($board['description']) ?></p>
 
                                         <p class="tags">
@@ -321,17 +321,17 @@
                                                 <span class="tag">#<?= htmlspecialchars($tag) ?></span>
                                             <?php endforeach; ?>
                                         </p>
-                                    </a>
 
-                                    <?php if (isset($_SESSION['user_id'])): ?>
-                                    <form method="post" action="backend/php/toggleFollowBoard.php" class="followFrm">
-                                        <input type="hidden" name="board_id" value="<?= $board['id'] ?>">
-                                            <input type="hidden" name="url" value="<?= $_SERVER['PHP_SELF'] ?>">
-                                        <button class="followBtn">
-                                            <?= $isFollowing ? 'Unfollow' : 'Follow' ?>
-                                        </button>
-                                    </form>
-                                    <?php endif; ?>
+                                        <?php if (isset($_SESSION['user_id'])): ?>
+                                            <form method="post" action="backend/php/toggleFollowBoard.php" class="followFrm">
+                                                <input type="hidden" name="board_id" value="<?= $board['id'] ?>">
+                                                    <input type="hidden" name="url" value="<?= $_SERVER['PHP_SELF'] ?>">
+                                                <button class="followBtn">
+                                                    <?= $isFollowing ? 'Unfollow' : 'Follow' ?>
+                                                </button>
+                                            </form>
+                                        <?php endif; ?>
+                                    </a>
                                 </div>
                             <?php endwhile; ?>
                         </div>
@@ -353,9 +353,9 @@
                                 <a class="objava" href="board.php?title=<?= urlencode($board['title']) ?>">
                                     <h2><?= htmlspecialchars($board['title']) ?></h2>
 
-                                    <p class="small">
-                                        Followers: <?= (int)$board['followers'] ?>
-                                        · Posts: <?= (int)$board['posts'] ?>
+                                    <p style="font-size: 1rem;" class="small">
+                                        Followers: <strong><?= (int)$board['followers'] ?></strong>
+                                        · Posts: <strong><?= (int)$board['posts'] ?></strong>
                                     </p>
 
                                     <p><?= htmlspecialchars($board['description']) ?></p>
@@ -365,17 +365,17 @@
                                             <span class="tag">#<?= htmlspecialchars($tag) ?></span>
                                         <?php endforeach; ?>
                                     </p>
-                                </a>
 
-                                <?php if (isset($_SESSION['user_id'])): ?>
-                                    <form method="post" action="backend/php/toggleFollowBoard.php" class="followFrm">
-                                        <input type="hidden" name="board_id" value="<?= $board['id'] ?>">
-                                            <input type="hidden" name="url" value="<?= $_SERVER['PHP_SELF'] ?>">
-                                        <button class="followBtn">
-                                            <?= $isFollowing ? 'Unfollow' : 'Follow' ?>
-                                        </button>
-                                    </form>
-                                <?php endif; ?>
+                                    <?php if (isset($_SESSION['user_id'])): ?>
+                                        <form method="post" action="backend/php/toggleFollowBoard.php" class="followFrm">
+                                            <input type="hidden" name="board_id" value="<?= $board['id'] ?>">
+                                                <input type="hidden" name="url" value="<?= $_SERVER['PHP_SELF'] ?>">
+                                            <button class="followBtn">
+                                                <?= $isFollowing ? 'Unfollow' : 'Follow' ?>
+                                            </button>
+                                        </form>
+                                    <?php endif; ?>
+                                </a>
                             </div>
                         <?php endwhile; ?>
                     </div>
@@ -396,9 +396,9 @@
                                 <a class="objava" href="board.php?title=<?= urlencode($board['title']) ?>">
                                     <h2><?= htmlspecialchars($board['title']) ?></h2>
 
-                                    <p class="small">
-                                        Followers: <?= (int)$board['followers'] ?>
-                                        · Posts: <?= (int)$board['posts'] ?>
+                                    <p style="font-size: 1rem;" class="small">
+                                        Followers: <strong><?= (int)$board['followers'] ?></strong>
+                                        · Posts: <strong><?= (int)$board['posts'] ?></strong>
                                     </p>
 
                                     <p><?= htmlspecialchars($board['description']) ?></p>
@@ -408,17 +408,17 @@
                                             <span class="tag">#<?= htmlspecialchars($tag) ?></span>
                                         <?php endforeach; ?>
                                     </p>
-                                </a>
 
-                                <?php if (isset($_SESSION['user_id'])): ?>
-                                    <form method="post" action="backend/php/toggleFollowBoard.php" class="followFrm">
-                                        <input type="hidden" name="board_id" value="<?= $board['id'] ?>">
-                                            <input type="hidden" name="url" value="<?= $_SERVER['PHP_SELF'] ?>">
-                                        <button class="followBtn">
-                                            <?= $isFollowing ? 'Unfollow' : 'Follow' ?>
-                                        </button>
-                                    </form>
-                                <?php endif; ?>
+                                    <?php if (isset($_SESSION['user_id'])): ?>
+                                        <form method="post" action="backend/php/toggleFollowBoard.php" class="followFrm">
+                                            <input type="hidden" name="board_id" value="<?= $board['id'] ?>">
+                                                <input type="hidden" name="url" value="<?= $_SERVER['PHP_SELF'] ?>">
+                                            <button class="followBtn">
+                                                <?= $isFollowing ? 'Unfollow' : 'Follow' ?>
+                                            </button>
+                                        </form>
+                                    <?php endif; ?>
+                                </a>
                             </div>
                         <?php endwhile; ?>
                     </div>
@@ -439,9 +439,9 @@
                                 <a class="objava" href="board.php?title=<?= urlencode($board['title']) ?>">
                                     <h2><?= htmlspecialchars($board['title']) ?></h2>
 
-                                    <p class="small">
-                                        Followers: <?= (int)$board['followers'] ?>
-                                        · Posts: <?= (int)$board['posts'] ?>
+                                    <p style="font-size: 1rem;" class="small">
+                                        Followers: <strong><?= (int)$board['followers'] ?></strong>
+                                        · Posts: <strong><?= (int)$board['posts'] ?></strong>
                                     </p>
 
                                     <p><?= htmlspecialchars($board['description']) ?></p>
@@ -451,17 +451,17 @@
                                             <span class="tag">#<?= htmlspecialchars($tag) ?></span>
                                         <?php endforeach; ?>
                                     </p>
-                                </a>
 
-                                <?php if (isset($_SESSION['user_id'])): ?>
-                                    <form method="post" action="backend/php/toggleFollowBoard.php" class="followFrm">
-                                        <input type="hidden" name="board_id" value="<?= $board['id'] ?>">
-                                            <input type="hidden" name="url" value="<?= $_SERVER['PHP_SELF'] ?>">
-                                        <button class="followBtn">
-                                            <?= $isFollowing ? 'Unfollow' : 'Follow' ?>
-                                        </button>
-                                    </form>
-                                <?php endif; ?>
+                                    <?php if (isset($_SESSION['user_id'])): ?>
+                                        <form method="post" action="backend/php/toggleFollowBoard.php" class="followFrm">
+                                            <input type="hidden" name="board_id" value="<?= $board['id'] ?>">
+                                                <input type="hidden" name="url" value="<?= $_SERVER['PHP_SELF'] ?>">
+                                            <button class="followBtn">
+                                                <?= $isFollowing ? 'Unfollow' : 'Follow' ?>
+                                            </button>
+                                        </form>
+                                    <?php endif; ?>
+                                </a>
                             </div>
                         <?php endwhile; ?>
                     </div>
@@ -482,9 +482,9 @@
                                 <a class="objava" href="board.php?title=<?= urlencode($board['title']) ?>">
                                     <h2><?= htmlspecialchars($board['title']) ?></h2>
 
-                                    <p class="small">
-                                        Followers: <?= (int)$board['followers'] ?>
-                                        · Posts: <?= (int)$board['posts'] ?>
+                                    <p style="font-size: 1rem;" class="small">
+                                        Followers: <strong><?= (int)$board['followers'] ?></strong>
+                                        · Posts: <strong><?= (int)$board['posts'] ?></strong>
                                     </p>
 
                                     <p><?= htmlspecialchars($board['description']) ?></p>
@@ -494,17 +494,17 @@
                                             <span class="tag">#<?= htmlspecialchars($tag) ?></span>
                                         <?php endforeach; ?>
                                     </p>
-                                </a>
 
-                                <?php if (isset($_SESSION['user_id'])): ?>
-                                    <form method="post" action="backend/php/toggleFollowBoard.php" class="followFrm">
-                                        <input type="hidden" name="board_id" value="<?= $board['id'] ?>">
-                                            <input type="hidden" name="url" value="<?= $_SERVER['PHP_SELF'] ?>">
-                                        <button class="followBtn">
-                                            <?= $isFollowing ? 'Unfollow' : 'Follow' ?>
-                                        </button>
-                                    </form>
-                                <?php endif; ?>
+                                    <?php if (isset($_SESSION['user_id'])): ?>
+                                        <form method="post" action="backend/php/toggleFollowBoard.php" class="followFrm">
+                                            <input type="hidden" name="board_id" value="<?= $board['id'] ?>">
+                                                <input type="hidden" name="url" value="<?= $_SERVER['PHP_SELF'] ?>">
+                                            <button class="followBtn">
+                                                <?= $isFollowing ? 'Unfollow' : 'Follow' ?>
+                                            </button>
+                                        </form>
+                                    <?php endif; ?>
+                                </a>
                             </div>
                         <?php endwhile; ?>
                     </div>
