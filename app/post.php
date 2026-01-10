@@ -206,7 +206,7 @@ if ($result6->num_rows > 0) {
                             //$pfp_path = "./media/pfp/" . $pfp_filename : "./media/roach_grayscale.jpg";
                             ?>
                             <img id="profile" src="<?= htmlspecialchars($pfp_path) ?>" alt="Profile">
-                            <a id="big" style="margin-left: 20px;" <?php echo "href=profile.php?id='" . $post['id_user'] . "'"; ?>><?= htmlspecialchars($author['username']) ?></a>
+                            <a id="big" style="margin-left: 20px;" href="view-profile.php?id=<?= urlencode($post['id_user']) ?>"><?= htmlspecialchars($author['username']) ?></a>
                         </div>
                         <!--TAGS-->
 
@@ -300,7 +300,7 @@ if ($result6->num_rows > 0) {
                                         <?php else: ?>
                                             <img id="comment-profile" src="<?= htmlspecialchars("./media/pfp/" . $comment["filename"] . "." . $comment["extension"]) ?>" alt="Profile">
                                         <?php endif; ?>
-                                        <a style="margin-left: 20px;" <?php echo "href='profile.php?id=" . $comment["id_user"] . "'"; ?>><?= htmlspecialchars($comment["username"]) ?></a>
+                                        <a style="margin-left: 20px;" href="view-profile.php?id=<?= urlencode($comment["id_user"]) ?>"><?= htmlspecialchars($comment["username"]) ?></a>
                                     </div>
                                     <div id="comment-content">
 
