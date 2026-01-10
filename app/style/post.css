@@ -128,23 +128,26 @@ main {
     border-left: 2px solid rgba(120, 255, 160, 0.45) ;
     border-right: 2px solid rgba(120, 255, 160, 0.45) ;
     background: rgba(120, 255, 160, 0.20);
+    border-bottom: 2px solid rgba(120, 255, 160, 0.45) ;
+    padding: 0 0 12px;
 }
 
 #comments-container {
     text-align: left;
-    display: flex;
-    flex-direction: column;
+    display: block;
 }
 
 #comment {
     border-bottom: 2px solid rgba(120, 255, 160, 0.45) ;
     display: flex;
     gap: 20px; 
+    align-items: center;
+    padding: 8px 12px;
 }
 
 #comment-user {
   flex: 1;
-  border-right: 2px solid rgba(120, 255, 160, 0.45) ;
+  border-right: none;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -159,6 +162,17 @@ main {
 
 #comment-content p {
     margin: 0;
+    flex: 1;
+    min-width: 0;
+}
+
+#comment:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+#comment-content form {
+    flex: 0 0 auto;
 }
 
 #comment-profile {
@@ -194,7 +208,7 @@ main {
 }
 
 #emptyCommentsMsg{
-    margin: 20px;
+    margin: 20px 20px 0;
     font-weight: bold;
 }
 
@@ -248,6 +262,30 @@ main {
     letter-spacing: 0.04em;
 }
 
+#edit_comment_form {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+}
+
+.edit_button {
+    background: rgba(40, 220, 110, 0.20);
+    border: 2px solid rgba(120, 255, 160, 0.45);
+    color: #e9f2ea;
+    border-radius: 10px;
+    cursor: pointer;
+    padding: 4px 10px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+.edit_button:hover {
+    background: rgba(40, 220, 110, 0.35);
+    border-color: rgba(120, 255, 160, 0.7);
+}
+
 .delete-button:empty::before {
     content: "Delete";
 }
@@ -255,4 +293,8 @@ main {
 .delete-button:hover {
     background: rgba(220, 40, 40, 0.35);
     border-color: rgba(255, 80, 80, 0.7);
+}
+
+.hidden {
+    display: none;
 }
