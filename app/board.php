@@ -2,21 +2,47 @@
 session_start();
 include "backend/php/conn.php";
 
-$title = $_GET['title'] ?? '';
+$bId = $_GET['id'] ?? '';
 
-if (!$title) {
+if (!$bId) {
     echo "No board specified";
     exit;
 }
 
-$stmt = $conn->prepare("SELECT * FROM board WHERE title=?");
-$stmt->bind_param("s", $title);
+$stmt = $conn->prepare("
+SELECT b.*, 
+    COUNT(DISTINCT bp.id_post) AS posts,
+    COUNT(DISTINCT bf.id_user) AS followers
+FROM board b
+LEFT JOIN board_post bp ON bp.id_board = b.id
+LEFT JOIN board_follow bf ON bf.id_board = b.id
+WHERE b.id = ?
+GROUP BY b.id
+");
+$stmt->bind_param("i", $bId);
 $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result->num_rows === 0) {
     echo "Board not found";
     exit;
+}
+
+$sql = $conn->prepare("
+    SELECT bt.id_board, t.name
+    FROM board_tag bt
+    JOIN tag t ON t.id = bt.id_tag
+    WHERE bt.id_board = ?
+");
+$sql->bind_param("i", $bId);
+$sql->execute();
+$tags = $sql->get_result();
+$sql->close();
+
+$bTags = [];
+
+while ($row = $tags->fetch_assoc()) {
+    $bTags[$row['id_board']][] = $row['name'];
 }
 
 $board = $result->fetch_assoc();
@@ -80,6 +106,39 @@ $comments = $result->fetch_all(MYSQLI_ASSOC);
 $commentCount = count($comments);
 $stmt->close();
 
+$stmt = $conn->prepare("
+    SELECT 
+        d.id,
+        d.title,
+        u.username,
+        COUNT(ud.id_discussion) AS comment_count
+    FROM discussion d
+    JOIN users u ON d.id_user = u.id
+    LEFT JOIN user_discussion ud ON d.id = ud.id_discussion
+    WHERE d.id_board = ?
+    GROUP BY d.id
+");
+$stmt->bind_param("i", $board['id']);
+$stmt->execute();
+$result = $stmt->get_result();
+$discussions = $result->fetch_all(MYSQLI_ASSOC);
+$stmt->close();
+
+$isFollowing = false;
+
+if (isset($_SESSION['user_id'])) {
+    $stmt = $conn->prepare("
+        SELECT 1 
+        FROM board_follow 
+        WHERE id_user = ? AND id_board = ?
+    ");
+    $stmt->bind_param("ii", $_SESSION['user_id'], $bId);
+    $stmt->execute();
+    $stmt->store_result();
+    $isFollowing = $stmt->num_rows > 0;
+    $stmt->close();
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -102,24 +161,63 @@ $stmt->close();
         <main>
             <input type="checkbox" name="" id="vb-cb-hide-info">
             <div id="board-info">
-                <?php echo "<h1 class='title'>" . htmlspecialchars($board['title']) . "</h1>"; ?>
-                <p class="vb-tags-views"><strong>TBA</strong>, followers</p>
-                <?php echo "<p class='vb-description'>" . htmlspecialchars($board['description']) . "</p>"; ?>
+
+                <div class="vb-header">
+                    <h1 class="title"><?= htmlspecialchars($board['title']) ?></h1>
+
+                    <?php if (
+                        isset($_SESSION['user_id']) &&
+                        $_SESSION['user_id'] === (int)$board['id_user']
+                    ): ?>
+                        <button id="editBoardBtn" class="vb-edit">Edit</button>
+                    <?php endif; ?>
+                </div>
+
+                <?php if (isset($_SESSION['user_id'])): ?>
+                    <form method="post" action="backend/php/toggleFollowBoard.php" class="followFrm">
+                        <input type="hidden" name="board_id" value="<?= (int)$board['id'] ?>">
+                        <input type="hidden" name="url" value="<?= htmlspecialchars($_SERVER['REQUEST_URI']) ?>">
+                        <button class="followBtn">
+                            <?= $isFollowing ? 'Unfollow' : 'Follow' ?>
+                        </button>
+                    </form>
+                <?php endif; ?>
+
+                <div class="vb-tags">
+                    <?php if ($tags->num_rows === 0) {
+                        echo "This board doesn't have tags.";
+                    }
+                    foreach ($bTags[$board['id']] ?? [] as $tag): ?>
+                        <span>
+                            #<?= htmlspecialchars($tag) ?>
+                        </span>
+                    <?php endforeach; ?>
+                </div>
+
+                <p class="vb-tags-views">
+                    <strong><?= htmlspecialchars($board['followers']) ?></strong> followers
+                </p>
+
+                <p class="vb-description">
+                    <?= htmlspecialchars($board['description']) ?>
+                </p>
+
                 <div class="vb-users">
                     <div class="vb-user-profile">
                         <img src="./media/logo1Pixel.png" alt="logo">
                         <div class="vb-user-text">
-                            <?php echo "<p class='vb-username'>" . htmlspecialchars($author['username']) . "</p>"; ?>
+                            <p class="vb-username"><?= htmlspecialchars($author['username']) ?></p>
                             <p class="vb-role">Creator</p>
                         </div>
                     </div>
                 </div>
+
             </div>
+
             <div class="vb-content">
                 <div class="posts">
                         <div id="ustvari-nov">
                         <?php if (isset($_SESSION['user_id'])): ?>
-                        
                             <button id="novpost">Create a new post <span class="plus">+</span></button>
                         <?php else: ?>
                             To create a post, <a href="login.php">Login</a>
@@ -140,45 +238,37 @@ $stmt->close();
                     </div>
                 </div>
                 <div class="vb-discussions">
-                    <button id="dis-new-button">Create discussion</button>
+                    <?php if (isset($_SESSION['user_id'])): ?>
+                        <button id="dis-new-button">Create discussion</button>
+                    <?php else: ?>
+                        To create a discussion, <a href="login.php">Login</a>
+                    <?php endif; ?>
                     <br>
                     <br>
                     <h1>Discussions</h1>
                     <ul>
                         <?php if (empty($discussions)): ?>
-                            <p>No posts yet.</p>
+                            <p>No discussions yet.</p>
                         <?php else: ?>
                             <?php foreach ($discussions as $discussion): ?>
                                 <li>
-                                <h2><a href="discussion.php?id=<?= urlencode($discussion['id']) ?>"><?= htmlspecialchars($discussion['title'])?></a></h2>
-                                
-                                <?php
-                                    $stmt = $conn->prepare("
-                                        SELECT *
-                                        FROM discussion d
-                                        JOIN user_discussion ud ON d.id = ud.id_discussion
-                                        WHERE d.id = ?
-                                    ");
-                                    $stmt->bind_param("i", $discussion['id']);
-                                    $stmt->execute();
-                                    $result = $stmt->get_result();
-                                    $comments = $result->fetch_all(MYSQLI_ASSOC);
-                                    $commentCount = count($comments);
-                                    $stmt->close();
-                                ?>
-                                
-                                <p><?= htmlspecialchars($commentCount) ?> comments</p>
-                                <div class="vb-d-user-info">
-                                    <p><?= htmlspecialchars($discussion['username']) ?></p>
-                                    <img src="./media/logo1Pixel.png" alt="logo">
-                                </div>
-                            </li>
+                                    <h2>
+                                        <a href="discussion.php?id=<?= urlencode($discussion['id']) ?>">
+                                            <?= htmlspecialchars($discussion['title']) ?>
+                                        </a>
+                                    </h2>
+
+                                    <p><?= (int)$discussion['comment_count'] ?> comments</p>
+
+                                    <div class="vb-d-user-info">
+                                        <p><?= htmlspecialchars($discussion['username']) ?></p>
+                                        <img src="./media/logo1Pixel.png" alt="logo">
+                                    </div>
+                                </li>
                             <?php endforeach; ?>
                         <?php endif; ?>
                     </ul>
                 </div>
-
-                
             </div>
 
             <!-- Obrazec za ustvarjanje posta v skritem stanju -->
@@ -235,6 +325,41 @@ $stmt->close();
                     </div>
                 </form>
             </div>
+            
+            <?php if (
+                isset($_SESSION['user_id']) &&
+                $_SESSION['user_id'] === (int)$board['id_user']
+            ): ?>
+            <div id="editobrazec">
+                <form id="editBoardForm" method="post" action="backend/php/updateBoard.php" style="display:none;">
+                    <input type="hidden" name="board_id" value="<?= $bId ?>">
+
+                    <label>
+                        Title
+                        <br>
+                        <input type="text" name="title" value="<?= htmlspecialchars($board['title']) ?>">
+                    </label>
+
+                    <label>
+                        Description
+                        <br>
+                        <textarea name="description"><?= htmlspecialchars($board['description']) ?></textarea>
+                    </label>
+
+                    <label>
+                        Tags
+                        <br>
+                        <input type="text" name="tags"
+                            value="<?= htmlspecialchars(implode(', ', $bTags[$board['id']] ?? [])) ?>">
+                    </label>
+
+                    <button type="submit">Save</button>
+                    <button type="button" id="cancelEdit">Cancel</button>
+                    <button type="button" id="deleteBoardBtn" class="deletebtn" data-board-id="<?= (int)$board['id'] ?>"> Delete board </button>
+
+                </form>
+            </div>
+            <?php endif; ?>
 
         </main>
         <?php

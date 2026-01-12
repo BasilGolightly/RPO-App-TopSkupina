@@ -23,3 +23,35 @@ newDiscussionButton.addEventListener('click', () => {
 btnCancelDiscussion.addEventListener('click', () => {
     overlayDiscussion.classList.remove('is-active');
 });
+
+//EDIT
+const editBtn = document.getElementById('editBoardBtn');
+const obrazec = document.getElementById('editobrazec');
+const form = document.getElementById('editBoardForm');
+const info = document.getElementById('board-info');
+
+editBtn?.addEventListener('click', () => {
+    obrazec.style.display = 'flex';
+    form.style.display = 'flex';
+});
+
+document.getElementById('cancelEdit')?.addEventListener('click', () => {
+    obrazec.style.display = 'none';
+    form.style.display = 'none';
+});
+
+//delete board
+const deleteBtn = document.getElementById('deleteBoardBtn');
+
+deleteBtn?.addEventListener('click', () => {
+    const boardId = deleteBtn.dataset.boardId;
+
+    const ok = confirm(
+        "Are you sure you want to delete this board?\n\nThis action cannot be undone."
+    );
+
+    if (!ok) return;
+
+    window.location.href =
+        `backend/php/deleteBoard.php?id=${encodeURIComponent(boardId)}`;
+});

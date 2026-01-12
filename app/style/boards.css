@@ -275,7 +275,6 @@ main {
     opacity: .5;
 }
 
-
 .objava-board-follow {
   width: 100%;
   display: flex;
@@ -285,6 +284,26 @@ main {
 .objava-board-follow-button {
   margin: 0 0 1rem 1rem;
 }
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.tag {
+    opacity: 70%;
+    padding: 4px 8px;
+    border: 2px solid #454545;
+    background-color: #757575;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
+
+/*.tag:hover {
+    opacity: 100%;
+}*/
 
 #ustvari-nov {
     display: flex;

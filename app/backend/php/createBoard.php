@@ -47,7 +47,7 @@ $boardId = $conn->insert_id;
 $stmt->close();
 
 //tags
-if (!empty($tags)) {
+if (!empty($tagsArray)) {
     //stavki
     $insertTag = $conn->prepare("INSERT IGNORE INTO tag (name) VALUES (?)");
     $getTagId = $conn->prepare("SELECT id FROM tag WHERE name=?");
