@@ -1,11 +1,8 @@
-<?php
-session_start();
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 
 <?php
+session_start();
 if(isset($_SESSION['registerError']) && $_SESSION['registerError'] != ""){
     echo '<script language="javascript">';
     echo 'alert("' . $_SESSION['registerError'] . '");';

@@ -1,0 +1,44 @@
+services:
+  # APACHE slika
+  web:
+    build:
+      context: .
+      dockerfile: docker/apache/Dockerfile
+    container_name: myapp_web
+    ports:
+      - "8080:80"
+    volumes:
+      - ./app:/var/www/html
+    env_file:
+      - .env
+    depends_on:
+      - db
+
+  # MARIA DB slika
+  db:
+    image: mariadb:11
+    container_name: myapp_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./docker/mariadb/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "3306:3306"
+    
+  # PHPMYADMIN slika
+  phpmyadmin:
+    image: phpmyadmin
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+    depends_on:
+      - db
+
+volumes:
+  db_data:
