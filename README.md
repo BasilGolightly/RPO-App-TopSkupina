@@ -1,8 +1,10 @@
-# RPO-BitBug
+# BitBug
 
-Spletna aplikacija za deljenje datotek in vsebin med uporabniki (slike, videoposnetki, tekst itd.)
+![BitBug](https://github.com/BasilGolightly/RPO-App-TopSkupina/blob/main/app/media/logo1Pixel.png)
 
-## Uporabljene tehnologije
+Preprosta spletna aplikacija za deljenje datotek in vsebin med uporabniki (slike, videoposnetki, tekst itd.).
+
+## Uporabljene tehnologije in orodja
 
 **MySQL** - DB  
 **PHP** - backend  
@@ -56,6 +58,27 @@ docker compose down
 ### Mentorja
 - asist. Bojan Žlahtič, izvajalec računalniških vaj
 - prof. Peter Kokol, nositelj predmeta, izvajalec predavanj
+
+## Dodatne informacije
+
+### Namen 
+
+Prikaz osvojenega znanja na področju skupinskega razvoja programske opreme (predmet RPO - razvoj programske opreme)
+in uporabe relevantnih orodij za verzioniranje, beleženje napredka, naslavljanja nalog,
+načinim razvoja, skupinskega dela itd. 
+
+### Kje, Kdaj
+
+![BitBug](https://github.com/BasilGolightly/RPO-App-TopSkupina/blob/main/app/media/feri.png)
+
+Univerza v Mariboru, Fakulteta za elektrotehniko, računalništvo in informatiko (FERI),
+
+Program Računalništvo in informacije tehnologije - UN (RIT UN), 2. letnik
+
+Šolsko leto: 2025/26, 1. semester
+
+
+
 
 
 
