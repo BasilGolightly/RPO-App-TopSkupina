@@ -7,6 +7,12 @@ $username = $_SESSION["username"] ?? "";
 include "./backend/php/conn.php";
 
 $user_id = $_GET["id"] ?? "";
+
+// ce gledamo lastni profil, idi na profile.php za owner pogled
+if($user_id == $_SESSION["user_id"]){
+    header("Location: profile.php");
+}
+
 $sql = "SELECT users.username, users.description, users.privacy, upload.filename AS pfp_filename
         FROM users
         LEFT JOIN pfp on pfp.id_user = users.id
