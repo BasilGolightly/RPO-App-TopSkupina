@@ -44,6 +44,21 @@ docker compose stop
 docker compose down
 ```
 
+Po vzpostavljenem okolju lahko dostopamo do posamičnih kontejnerjev preko brskalnika:
+
+```bash
+
+# BitBug - apache
+localhost:8080
+
+# PhpMyAdmin
+localhost:8081
+
+# MariaDB
+localhost:3306
+
+```
+
 ## Sodelujoči
 
 ### Študenti - RIT 2 UN, FERI, Maribor, 2025/26

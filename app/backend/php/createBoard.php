@@ -74,6 +74,6 @@ if (!empty($tagsArray)) {
     $linkTag->close();
 }
 
-header("Location: ../../board.php?title=" . urlencode($title));
+header("Location: ../../board.php?id=" . urlencode($boardId));
 exit;
 ?>

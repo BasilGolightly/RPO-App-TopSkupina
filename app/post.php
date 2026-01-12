@@ -43,6 +43,8 @@ $isBoardPost = false;
 $hasPfp = false;
 $hasAttachments = false;
 $hasComments = false;
+$hasTags = false;
+$hasRatings = false;
 
 // (3) BOARD
 
@@ -124,6 +126,47 @@ if ($result6->num_rows > 0) {
     $comments = $result6->fetch_all(MYSQLI_ASSOC);
 }
 
+// (7) TAGS
+$stmt7 = $conn->prepare("
+    SELECT tag FROM post_tags
+    WHERE id_post = ?
+");
+$stmt7->bind_param("i", $post_id);
+$stmt7->execute();
+$result7 = $stmt7->get_result();
+$tags;
+if ($result7->num_rows > 0) {
+    $hasTags = true;
+    $tags = $result7->fetch_all(MYSQLI_ASSOC);
+}
+
+
+$stmt8 = $conn->prepare("
+    SELECT * FROM rating
+    WHERE id_post = ?
+");
+$stmt8->bind_param("i", $post_id);
+$stmt8->execute();
+$result8 = $stmt8->get_result();
+$ratings;
+$ratingSum = 0;
+$ratingAvg = 0;
+$ratingCount = $result8->num_rows;
+$userRated = 0;
+
+if ($ratingCount > 0) {
+    $hasRatings = true;
+    $ratings = $result8->fetch_all(MYSQLI_ASSOC);
+    foreach ($ratings as $rating) {
+        $ratingSum += $rating["rating"];
+        if($rating["id_user"] == $_SESSION["user_id"]){
+            $userRated = 1;
+        }
+    }
+    $ratingAvg = floor($ratingSum / $ratingCount);
+}
+
+
 ?>
 
 <!DOCTYPE html>
@@ -187,14 +230,24 @@ if ($result6->num_rows > 0) {
                                 echo "
                                     <p id='small'>Board(s):</p>
                                     <br>
-                                    <a id='small' target='__blank__' href='board.php?title=" . htmlspecialchars($boards['title']) . "'>" . htmlspecialchars(" " . $boards['title']) . "</a>";
+                                    <a id='small' target='__blank__' href='board.php?id=" . htmlspecialchars($boards['id']) . "'>" . htmlspecialchars(" " . $boards['title']) . "</a>";
                             }
                             ?>
                         </div>
                         <!--BOARDS-->
 
                         <!--TAGS-->
-                        <p id="small">Tag(s): #tag1 #tag2</p>
+                        <p id="small">Tag(s):
+                            <?php if ($hasTags): ?>
+                                <?php
+                                foreach ($tags as $tag) {
+                                    echo "#" . $tag["tag"] . "&ThinSpace;";
+                                }
+                                ?>
+                            <?php else: ?>
+                                None
+                            <?php endif; ?>
+                        </p>
                         <div id="post-info-row">
                             <?php
                             $pfp_path = "./media/pfp/";
@@ -211,12 +264,44 @@ if ($result6->num_rows > 0) {
                         <!--TAGS-->
 
                         <!--RATING-->
+                        <div id="post-info-row">
+                            <p id="big" style="margin-right: 10px;">Ratings &times;<?= $ratingCount ?>: </p>
+                            <h1>
+                                <?php
+                                // polne zvezde 
+                                for ($i = 1; $i <= $ratingAvg; $i++) {
+                                    echo "&#9733;";
+                                }
+                                // prazne zvezde
+                                for ($j = 1; $j <= (5 - $ratingAvg); $j++) {
+                                    echo "&#9734;";
+                                }
+                                ?>
+                            </h1>
+                        </div>
+
                         <?php if ($post["id_user"] != $author["id"]): ?>
-                            <div id="post-info-row">
-                                <p id="big" style="margin-right: 10px;">Rate: </p>
-                                <h1>★★★☆☆</h1>
-                            </div>
+                            <form method="post" class="rateSection" action="./backend/php/ratePost.php">
+                                <div class="post-info-row">
+                                    <p id="big" style="margin-right: 10px;">Rate: </p>
+                                    <input type="hidden" name="pId" value="<?= $post_id ?>">
+                                    <!--<input type="hidden" name="uId" value="<?= $_SESSION["user_id"]  ?>">-->
+                                    <input type="hidden" name="rating" id="ratingField" value="1">
+                                    <input type="hidden" name="alreadyRated" value="<?= $userRated ?>">
+                                    <h1>
+                                    <?php 
+                                    for($i = 1; $i <= 5; $i++){
+                                        echo "<button type='button' class='star' id='star" . $i . "'>&#9734;</button>";
+                                    }
+                                    ?>
+                                    </h1>
+                                </div>  
+                                <div class="post-info-row">
+                                    <input type="submit" class="rateBtn" id="rateBtn" value="Rate" disabled>
+                                </div>
+                            </form>
                         <?php endif; ?>
+                        <!--RATING-->
                     </div>
                     <!-- TEXT -->
 
@@ -267,10 +352,23 @@ if ($result6->num_rows > 0) {
                                 foreach ($uploads as $upload) {
                                     $filename = "upload" . $upload["id"] . "." . $upload["extension"];
                                     $currPath = $filePath . $filename;
-                                    echo "
-                                    <div class='post-info-row'>
-                                        <a href='" . $currPath . "' target='__blank__'>" . $filename . "</a>" .
-                                        "</div>";
+                                    echo "<form method='post' class='post-info-row' action='./backend/php/deleteFile.php'>";
+                                    echo "<a href='" . $currPath . "' target='__blank__'>" . $filename . "</a>";
+
+                                    if ($post["id_user"] == $author["id"]) {
+                                        echo "<input type='hidden' name='pId' value='" . $post_id . "'>";
+                                        echo "<input type='hidden' name='uId' value='" . $upload["id"] . "'>";
+                                        echo "<input type='hidden' name='uExt' value='" . $upload["extension"] . "'>";
+
+                                        if ($isBoardPost) {
+                                            echo "<input type='hidden' name='is_board_post' value='1'>";
+                                        } else {
+                                            echo "<input type='hidden' name='is_board_post' value='0'>";
+                                        }
+                                        echo "<input type='submit' class='fileDeleteBtn' value='Delete'>";
+                                    }
+
+                                    echo "</form>";
                                     //echo "<br>";
                                 }
                             } else {
@@ -360,10 +458,12 @@ if ($result6->num_rows > 0) {
         ?>
     </div>
     <script>
-        let error = "<?= htmlspecialchars($_SESSION["error"]) ?>";
-        if (error.trim() != "") {
-            alert(error);
-        }
+        <?php if (isset($_SESSION["error"]) && !empty($_SESSION["error"])): ?>
+            let error = "<?= $_SESSION['error'] ?>";
+            if (error.trim() != "") {
+                alert(error);
+            }
+        <?php endif; ?>
 
         document.querySelectorAll("#edit_comment_form").forEach((form) => {
             const btn = form.querySelector("#edit_comment_button");
@@ -384,6 +484,9 @@ if ($result6->num_rows > 0) {
             });
         });
     </script>
+    <?php
+    unset($_SESSION["error"]);
+    ?>
 </body>
 
 </html>

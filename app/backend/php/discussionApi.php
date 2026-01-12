@@ -66,7 +66,7 @@ elseif ($request_type == "DeleteDiscussion") {
 
   $stmt->close();
 
-  header("Location: ../../board.php?title=" . urlencode($board_title) . "&error=" . urlencode($error));
+  header("Location: ../../board.php?id=" . urlencode($board_id) . "&error=" . urlencode($error));
 }
 
 

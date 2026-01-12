@@ -77,7 +77,7 @@ $stmt->close();
             <div class="dis-main-post">
                 <div class="dis-header">
                     <div class="dis-header-levo">
-                        <?php echo '<a href="./board.php?title='.$board['title'].'">Nazaj</a>' ?>
+                        <?php echo '<a href="./board.php?id='.$board['id'].'">Nazaj</a>' ?>
                         <h2><?php echo htmlspecialchars($board['title']) ?></h2>
                         <h1><?php echo htmlspecialchars($discussion["title"]) ?></h1>
                     </div>
