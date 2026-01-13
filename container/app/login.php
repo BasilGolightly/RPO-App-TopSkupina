@@ -1,0 +1,55 @@
+<?php
+session_start();
+?>
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <?php
+  if(isset($_SESSION['loginError']) && $_SESSION['loginError'] != ""){
+    echo '<script language="javascript">';
+    echo 'alert("' . $_SESSION['loginError'] . '");';
+    echo '</script>';
+  }
+  ?>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="./style/style.css" />
+    <link rel="stylesheet" href="./style/login.css" />
+  </head>
+  <body class="auth">
+    <main class="card">
+      <img class="logo" src="./media/logo1Pixel.png" alt="FileBug logo" />
+      <h1>BitBug</h1>
+      <p class="sub">Login</p>
+      <form action="./backend/php/login.php" method="post" class="login_form">
+        <label>
+          Username
+          <input
+            type="text"
+            name="username"
+            required
+            placeholder="Enter your username"
+            autocomplete="username"
+          />
+        </label>
+
+        <label>
+          Password
+          <input
+            type="password"
+            name="password"
+            required
+            placeholder="Enter your password"
+            autocomplete="current-password"
+          />
+        </label>
+        <button type="submit">Log in</button>
+      </form>
+
+      <p class="register">No account? <a href="./register.php">Register</a></p>
+    </main>
+  </body>
+</html>

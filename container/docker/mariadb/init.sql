@@ -65,7 +65,9 @@ CREATE TABLE rating(
     id int AUTO_INCREMENT PRIMARY KEY,
     rating tinyint NOT NULL,
     id_post int NOT NULL,
-    FOREIGN KEY (id_post) REFERENCES post(id) ON DELETE CASCADE
+    id_user int NOT NULL,
+    FOREIGN KEY (id_post) REFERENCES post(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_user) REFERENCES users(id) ON DELETE CASCADE
 );
 
 -- UPLOAD - objavljena datoteka

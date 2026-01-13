@@ -206,7 +206,7 @@ if (isset($_SESSION['user_id'])) {
                     <div class="vb-user-profile">
                         <img src="./media/logo1Pixel.png" alt="logo">
                         <div class="vb-user-text">
-                            <p class="vb-username"><?= htmlspecialchars($author['username']) ?></p>
+                            <a class="vb-username" href="view-profile.php?id=<?= $author['id'] ?>"><?= htmlspecialchars($author['username']) ?></a>
                             <p class="vb-role">Creator</p>
                         </div>
                     </div>
