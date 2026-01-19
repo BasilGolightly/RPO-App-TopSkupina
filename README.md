@@ -41,7 +41,7 @@ docker compose ps
 docker compose stop
 
 # odstrani
-docker compose down
+docker compose down -v
 ```
 
 Po vzpostavljenem okolju lahko dostopamo do posamičnih kontejnerjev preko brskalnika:

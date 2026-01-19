@@ -53,7 +53,7 @@ if (!empty($tagsArray)) {
     $getTagId = $conn->prepare("SELECT id FROM tag WHERE name=?");
     $linkTag = $conn->prepare("INSERT IGNORE INTO board_tag (id_board, id_tag) VALUES (?, ?)");
 
-    foreach ($tags as $tag) {
+    foreach ($tagsArray as $tag) {
         //vstavi tag (ce ze obstaja ignorira)
         $insertTag->bind_param("s", $tag);
         $insertTag->execute();

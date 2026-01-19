@@ -16,7 +16,7 @@ $stmt = $conn->prepare("
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $result1 = $stmt->get_result();
-$following = $result1->fetch_assoc();
+$following = $result1->fetch_all(MYSQLI_ASSOC);
 $stmt->close();
 
 // get followers
@@ -31,7 +31,7 @@ $stmt2 = $conn->prepare("
 $stmt2->bind_param("i", $user_id);
 $stmt2->execute();
 $result2 = $stmt2->get_result();
-$followers = $result2->fetch_assoc();
+$followers = $result2->fetch_all(MYSQLI_ASSOC);
 $stmt2->close();
 
 // get friends
@@ -47,7 +47,7 @@ $stmt3 = $conn->prepare("
 $stmt3->bind_param("i", $user_id);
 $stmt3->execute();
 $result3 = $stmt3->get_result();
-$friends = $result3->fetch_assoc();
+$friends = $result3->fetch_all(MYSQLI_ASSOC);
 $stmt3->close();
 
 ?>

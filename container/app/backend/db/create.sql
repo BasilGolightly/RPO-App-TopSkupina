@@ -1,5 +1,8 @@
+/*
+# ZA DOCKER BREZ TEH DVEH
 DROP DATABASE IF EXISTS BitBug;
 CREATE DATABASE BitBug;
+*/
 USE BitBug;
 
 /*-------------------------USERS-------------------------*/
@@ -11,7 +14,7 @@ CREATE TABLE users(
     username char(30) NOT NULL,
     password char(255) NOT NULL,
     role enum('user', 'admin', 'mod') NOT NULL DEFAULT 'user',
-    joined date DEFAULT CURRENT_DATE,
+    joined date DEFAULT (CURRENT_DATE),
     description TEXT DEFAULT 'About me =)', 
     /* possible fix, če zgornja koda ne deluje (version dependant):
     joined date DEFAULT (CURRENT_DATE)

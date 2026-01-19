@@ -53,13 +53,13 @@ $stmt->bind_param("ss", $username, $hashedPassword);
 
 //izvedi
 if($stmt->execute()){
-    session_start();
     $_SESSION["user_id"] = $stmt->insert_id;
     $_SESSION["username"] = $username;
     $_SESSION["role"] = "user";
     $stmt->close();
     $conn->close();
     header('Location: ../../index.php');
+    die();
 }
 else{
     $_SESSION['registerError'] = "Failed registration.";
